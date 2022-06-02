@@ -1,0 +1,8 @@
+{
+  "register": {
+    "success": "Sign up sucess",
+    "error": {
+      "emailExist": "Email exist."
+    }
+  }
+}
