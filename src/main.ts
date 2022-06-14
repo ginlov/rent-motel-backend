@@ -6,7 +6,6 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
   const configService = app.get(ConfigService);
-
   /* API prefix */
   app.setGlobalPrefix(configService.get('app.apiPrefix'), {
     exclude: ['/'],

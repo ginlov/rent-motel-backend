@@ -1,8 +1,0 @@
-{
-  "register": {
-    "success": "Tạo tài khoản thành công",
-    "error": {
-      "emailExist": "Địa chỉ email đã tồn tại."
-    }
-  }
-}
