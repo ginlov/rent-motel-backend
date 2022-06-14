@@ -1,0 +1,32 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "root",
+  "password": "outsource123",
+  "database": "rent_motel",
+  "synchronize": true,
+  "dropSchema": false,
+  "keepConnectionAlive": true,
+  "logging": true,
+  "entities": [
+    "/home/dt/Code/projects/rent-motel-backend/src/database/../**/*.entity{.ts,.js}"
+  ],
+  "migrations": [
+    "/home/dt/Code/projects/rent-motel-backend/src/database/migrations/**/*{.ts,.js}"
+  ],
+  "seeds": [
+    "/home/dt/Code/projects/rent-motel-backend/src/database/seeds/**/*{.ts,.js}"
+  ],
+  "factories": [
+    "/home/dt/Code/projects/rent-motel-backend/src/database/factories/**/*{.ts,.js}"
+  ],
+  "cli": {
+    "entitiesDir": "src",
+    "migrationsDir": "src/database/migrations",
+    "subscribersDir": "subscriber"
+  },
+  "extra": {
+    "max": 100
+  }
+}
