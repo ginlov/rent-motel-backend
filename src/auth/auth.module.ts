@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { AddressesModule } from '../addresses/addresses.module';
 import { RolesModule } from '../roles/roles.module';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
@@ -21,6 +22,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }),
     UsersModule,
     RolesModule,
+    AddressesModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

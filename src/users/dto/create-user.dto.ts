@@ -23,7 +23,7 @@ export class CreateUserDto {
   @IsOptional()
   birthday: Date;
 
-  @IsOptional()
+  @IsString()
   addressId: string;
 
   @IsString()

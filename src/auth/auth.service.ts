@@ -6,6 +6,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { AddressesService } from '../addresses/addresses.service';
 import { RolesService } from '../roles/roles.service';
 import { UsersService } from '../users/users.service';
 
@@ -19,6 +20,7 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private rolesService: RolesService,
+    private addressesService: AddressesService,
   ) {}
 
   async register(userRegisterData: AuthRegisterDto) {
@@ -32,6 +34,12 @@ export class AuthService {
     }
 
     /* create new user */
+    const address = await this.addressesService.create({
+      city: userRegisterData.city,
+      district: userRegisterData.district,
+      ward: userRegisterData.ward,
+      detail: userRegisterData.detail,
+    });
     const role = await this.rolesService.findOne({
       where: {
         name: userRegisterData.role,
@@ -39,10 +47,11 @@ export class AuthService {
     });
     const hashedPassword = await bcrypt.hash(userRegisterData.password, 12);
     userRegisterData.password = hashedPassword;
-    
+
     return await this.usersService.create({
       ...userRegisterData,
       roleId: role.id,
+      addressId: address.id,
     });
   }
 

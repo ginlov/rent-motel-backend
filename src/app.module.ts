@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { MotelsModule } from './motels/motels.module';
 import { RolesModule } from './roles/roles.module';
+import { AddressesModule } from './addresses/addresses.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { RolesModule } from './roles/roles.module';
     UsersModule,
     RolesModule,
     MotelsModule,
+    AddressesModule,
   ],
   providers: [
     {

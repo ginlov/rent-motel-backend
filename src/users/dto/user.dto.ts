@@ -1,5 +1,8 @@
 import { Expose, Transform } from 'class-transformer';
+import { AddressDto } from '../../addresses/dto/address.dto';
 import { Role } from '../../common/constants';
+import { Serialize } from '../../interceptors/serialize.interceptor';
+import { RoleDto } from '../../roles/dto/role.dto';
 
 export class UserDto {
   @Expose()
@@ -15,5 +18,8 @@ export class UserDto {
   birthday: Date;
 
   @Expose()
-  role: Role;
+  address: AddressDto;
+
+  @Expose()
+  role: RoleDto;
 }

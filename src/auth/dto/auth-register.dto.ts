@@ -1,4 +1,5 @@
 import {
+  IsDate,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -19,6 +20,18 @@ export class AuthRegisterDto {
 
   @IsEnum(Gender)
   gender: Gender;
+
+  @IsString()
+  city: string;
+
+  @IsString()
+  district: string;
+
+  @IsString()
+  ward: string;
+
+  @IsString()
+  detail: string;
 
   @IsEnum({ [Role.RENTER]: Role.RENTER, [Role.OWNER]: Role.OWNER })
   role: Role;

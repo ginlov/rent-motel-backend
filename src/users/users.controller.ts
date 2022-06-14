@@ -20,7 +20,7 @@ export class UsersController {
         id: request.user.id,
       },
     };
-    const user = await this.usersService.findOne(options);
+    const user = await this.usersService.findOne(options, true);
 
     return {
       message: 'Get user profile successfully.',
