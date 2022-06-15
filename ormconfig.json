@@ -1,9 +1,9 @@
 {
   "type": "mysql",
-  "host": "localhost",
+  "host": "db-httt.camofegrdgz6.us-east-1.rds.amazonaws.com",
   "port": 3306,
-  "username": "root",
-  "password": "outsource123",
+  "username": "admin",
+  "password": "tung2000",
   "database": "rent_motel",
   "synchronize": true,
   "dropSchema": false,

@@ -1,1 +1,1 @@
-{"version":3,"file":"1655036630393-user.js","sourceRoot":"","sources":["../../../src/database/migrations/1655036630393-user.ts"],"names":[],"mappings":";;;AAEA,MAAa,iBAAiB;IAEnB,KAAK,CAAC,EAAE,CAAC,WAAwB;IACxC,CAAC;IAEM,KAAK,CAAC,IAAI,CAAC,WAAwB;IAC1C,CAAC;CAEJ;AARD,8CAQC"}
+{"version":3,"file":"1655036630393-user.js","sourceRoot":"","sources":["../../../src/database/migrations/1655036630393-user.ts"],"names":[],"mappings":";;;AAEA,MAAa,iBAAiB;IACrB,KAAK,CAAC,EAAE,CAAC,WAAwB,IAAkB,CAAC;IAEpD,KAAK,CAAC,IAAI,CAAC,WAAwB,IAAkB,CAAC;CAC9D;AAJD,8CAIC"}
