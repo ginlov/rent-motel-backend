@@ -10,7 +10,7 @@ import { Motel } from '../motels/motel.entity';
 import { User } from '../users/user.entity';
 
 @Entity('renter_motel')
-export class Role {
+export class RenterMotel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -25,7 +25,7 @@ export class Role {
   @Column({ type: 'timestamp', name: 'start_date' })
   startDate: Date;
 
-  @Column({ type: 'timestamp', name: 'end_date' })
+  @Column({ type: 'timestamp', name: 'end_date', default: null })
   endDate: Date;
 
   @Column({ type: 'float' })
