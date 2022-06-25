@@ -11,6 +11,10 @@ import { UsersModule } from './users/users.module';
 import { MotelsModule } from './motels/motels.module';
 import { RolesModule } from './roles/roles.module';
 import { AddressesModule } from './addresses/addresses.module';
+import { UtilitiesModule } from './utilities/utilities.module';
+import { ChatService } from './chat/chat.service';
+import { ChatModule } from './chat/chat.module';
+import { RenterMotelModule } from './renter-motel/renter-motel.module';
 
 @Module({
   imports: [
@@ -27,6 +31,9 @@ import { AddressesModule } from './addresses/addresses.module';
     RolesModule,
     MotelsModule,
     AddressesModule,
+    UtilitiesModule,
+    ChatModule,
+    RenterMotelModule,
   ],
   providers: [
     {

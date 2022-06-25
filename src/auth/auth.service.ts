@@ -6,10 +6,10 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+
 import { AddressesService } from '../addresses/addresses.service';
 import { RolesService } from '../roles/roles.service';
 import { UsersService } from '../users/users.service';
-
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { AuthRegisterDto } from './dto/auth-register.dto';
 
@@ -33,18 +33,15 @@ export class AuthService {
       throw new ConflictException('Email in use.');
     }
 
-    /* create new user */
-    const address = await this.addressesService.create({
-      city: userRegisterData.city,
-      district: userRegisterData.district,
-      ward: userRegisterData.ward,
-      detail: userRegisterData.detail,
-    });
+    const address = await this.addressesService.create(
+      userRegisterData.address,
+    );
     const role = await this.rolesService.findOne({
       where: {
         name: userRegisterData.role,
       },
     });
+
     const hashedPassword = await bcrypt.hash(userRegisterData.password, 12);
     userRegisterData.password = hashedPassword;
 

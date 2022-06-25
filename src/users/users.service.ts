@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -6,6 +6,7 @@ import { User } from './user.entity';
 import { plainToInstance } from 'class-transformer';
 import { RoleDto } from '../roles/dto/role.dto';
 import { AddressDto } from '../addresses/dto/address.dto';
+import { cloneDeep } from 'lodash';
 
 @Injectable()
 export class UsersService {
@@ -19,25 +20,18 @@ export class UsersService {
     );
   }
 
-  async findOne(options: FindOneOptions<User>, populate = false) {
-    let user = await this.usersRepository.findOne(options);
+  async findOne(options: FindOneOptions<User>) {
+    let user: User;
+    try {
+      user = await this.usersRepository.findOne(options);
+    } catch (error) {
+      throw new NotFoundException('User not found');
+    }
 
-    if (populate) {
-      user = await this.usersRepository
-        .createQueryBuilder('users')
-        .where('users.id = :id', { id: user.id })
-        .leftJoinAndSelect('users.addressId', 'addresses')
-        .leftJoinAndSelect('users.roleId', 'roles')
-        .getOne();
-
-      user['address'] = plainToInstance(
-        AddressDto,
-        JSON.parse(JSON.stringify(user.addressId)),
-      );
-      user['role'] = plainToInstance(
-        RoleDto,
-        JSON.parse(JSON.stringify(user.roleId)),
-      );
+    /* populate */
+    if ('join' in options) {
+      user['address'] = plainToInstance(AddressDto, cloneDeep(user.addressId));
+      user['role'] = plainToInstance(RoleDto, cloneDeep(user.roleId));
     }
 
     return user;

@@ -24,8 +24,8 @@ export class AuthController {
   }
 
   @TransformResponse()
-  @Post('login')
   @HttpCode(HttpStatus.OK)
+  @Post('login')
   async login(@Body() userLoginData: AuthLoginDto): Promise<IResponse> {
     const token = await this.authService.login(userLoginData);
 
