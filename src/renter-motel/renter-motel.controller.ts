@@ -12,16 +12,17 @@ export class RenterMotelController {
   constructor(private renterMotelService: RenterMotelService) {}
 
   @Post('')
-  async createMotel(
+  async createRenterMotel(
     @Request() request,
     @Body() renterMotelData: CreateRenterMotelDto,
   ): Promise<IResponse> {
     const renterId = request.user.id;
 
-    const motel = await this.renterMotelService.create(
-      renterId,
-      renterMotelData,
-    );
+    renterMotelData.renterId = renterId;
+
+    const motel = await this.renterMotelService.create({
+      ...renterMotelData,
+    });
 
     return {
       message: `Rent a motel with id \`${renterMotelData.motelId}\` successfully.`,

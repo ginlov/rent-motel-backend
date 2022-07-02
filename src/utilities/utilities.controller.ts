@@ -21,7 +21,7 @@ export class UtilitiesController {
     const utility = await this.utilitiesService.create(createUtilityDto);
 
     return {
-      message: 'Create utility successfully.',
+      message: 'Create utility successfully',
       data: utility,
     };
   }

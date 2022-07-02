@@ -20,7 +20,7 @@ export const transformQuery = (query: QueryList): FindManyOptions<any> => {
   if ('limit' in query) {
     if (query['limit'] <= 0) {
       throw new BadRequestException(
-        'Invalid limit (a valid value must be a positive number).',
+        'Invalid limit (a valid value must be a positive number)',
       );
     }
     set(filters, 'take', query['limit']);
@@ -29,7 +29,7 @@ export const transformQuery = (query: QueryList): FindManyOptions<any> => {
   if ('offset' in query) {
     if (query['offset'] <= 0) {
       throw new BadRequestException(
-        'Invalid offset (a valid value must be a positive number).',
+        'Invalid offset (a valid value must be a positive number)',
       );
     }
     set(filters, 'skip', query['offset'] - 1);

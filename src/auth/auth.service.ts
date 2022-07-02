@@ -30,7 +30,7 @@ export class AuthService {
       },
     });
     if (userExisted) {
-      throw new ConflictException('Email in use.');
+      throw new ConflictException('Email in use');
     }
 
     const address = await this.addressesService.create(
@@ -47,8 +47,8 @@ export class AuthService {
 
     return await this.usersService.create({
       ...userRegisterData,
-      roleId: role.id,
       addressId: address.id,
+      roleId: role.id,
     });
   }
 
@@ -59,10 +59,10 @@ export class AuthService {
       },
     });
     if (!user) {
-      throw new UnauthorizedException('Account does not exist.');
+      throw new UnauthorizedException('Account does not exist');
     }
     if (!(await bcrypt.compare(userLoginData.password, user.password)))
-      throw new UnauthorizedException('Invalid password.');
+      throw new UnauthorizedException('Invalid password');
 
     const token = this.jwtService.sign({
       id: user.id,

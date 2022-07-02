@@ -15,12 +15,12 @@ export class Mail {
   id: string;
 
   @JoinColumn({ name: 'receiver_id' })
-  @OneToOne((type) => User)
-  receiverId: string;
+  @OneToOne(() => User, (user) => user.id)
+  receiver: User;
 
   @Column()
   content: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: string;
 }

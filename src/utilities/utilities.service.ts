@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUtilityDto } from './dto/create-utility.dto';
 import { Utility } from './utility.entity';
 
@@ -10,6 +10,9 @@ export class UtilitiesService {
     @InjectRepository(Utility) private utilitiesRepository: Repository<Utility>,
   ) {}
 
+  async findOne(options: FindOneOptions<Utility>) {
+    return await this.utilitiesRepository.findOne(options);
+  }
   async create(createUtilityDto: CreateUtilityDto) {
     return await this.utilitiesRepository.save(
       this.utilitiesRepository.create(createUtilityDto),

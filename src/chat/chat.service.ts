@@ -16,11 +16,11 @@ export class ChatService {
   async create(senderId: string, messageData: Partial<CreateChatHistoryDto>) {
     const senderExisted = await this.usersService.findOne({
       where: {
-        id: messageData.receiverId,
+        id: messageData.receiver.id,
       },
     });
     if (!senderExisted) {
-      throw new NotFoundException('Receiver not found.');
+      throw new NotFoundException('Receiver not found');
     }
 
     return await this.chatRepository.save(

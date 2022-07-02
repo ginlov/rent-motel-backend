@@ -15,16 +15,16 @@ export class ChatHistory {
   id: string;
 
   @JoinColumn({ name: 'sender_id' })
-  @OneToOne((type) => User)
-  senderId: string;
+  @OneToOne(() => User, (user) => user.id)
+  sender: User;
 
   @JoinColumn({ name: 'receiver_id' })
-  @OneToOne((type) => User)
-  receiverId: string;
+  @OneToOne(() => User, (user) => user.id)
+  receiver: User;
 
   @Column()
   message: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
 }

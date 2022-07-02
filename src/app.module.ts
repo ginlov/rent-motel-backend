@@ -15,6 +15,7 @@ import { UtilitiesModule } from './utilities/utilities.module';
 import { ChatService } from './chat/chat.service';
 import { ChatModule } from './chat/chat.module';
 import { RenterMotelModule } from './renter-motel/renter-motel.module';
+import { MotelUtilityModule } from './motel-utility/motel-utility.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { RenterMotelModule } from './renter-motel/renter-motel.module';
     UtilitiesModule,
     ChatModule,
     RenterMotelModule,
+    MotelUtilityModule,
   ],
   providers: [
     {

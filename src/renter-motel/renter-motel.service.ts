@@ -17,34 +17,41 @@ export class RenterMotelService {
     private motelsService: MotelsService,
   ) {}
 
-  async create(renterId: string, renterMotelData: CreateRenterMotelDto) {
+  async create(renterMotelData: CreateRenterMotelDto) {
     const motelExisted = await this.motelsService.findOne({
       where: {
         id: renterMotelData.motelId,
       },
     });
     if (!motelExisted) {
-      throw new NotFoundException('Invalid motel id.');
+      throw new NotFoundException('Invalid motel id');
     }
 
     const renterMotelExisted = await this.renterMotelRepository.findOne({
       where: {
-        // renterId: renterId,
-        // motelId: renterMotelData.motelId,
+        renter: {
+          id: renterMotelData.renterId,
+        },
+        motel: {
+          id: renterMotelData.motelId,
+        },
       },
-      loadRelationIds: true,
     });
 
-    console.log(renterMotelExisted);
-
     if (renterMotelExisted) {
-      throw new ConflictException('User rented this motel.');
+      throw new ConflictException('User rented this motel');
     }
 
     return await this.renterMotelRepository.save(
       this.renterMotelRepository.create({
         ...renterMotelData,
-        renterId: renterId,
+        renter: {
+          id: renterMotelData.renterId,
+        },
+        motel: {
+          id: renterMotelData.motelId,
+        },
+        status: 1,
         startDate: new Date(),
       }),
     );

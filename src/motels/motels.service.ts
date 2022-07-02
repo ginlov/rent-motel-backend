@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { cloneDeep } from 'lodash';
@@ -19,17 +23,6 @@ export class MotelsService {
   async find(options: FindManyOptions<Motel>) {
     const motels = await this.motelsRepository.find(options);
 
-    /* populate */
-    if ('join' in options) {
-      motels.forEach((motel) => {
-        motel['address'] = plainToInstance(
-          AddressDto,
-          cloneDeep(motel.addressId),
-        );
-        return motel;
-      });
-    }
-
     return motels;
   }
 
@@ -39,13 +32,6 @@ export class MotelsService {
       motel = await this.motelsRepository.findOne(options);
     } catch (error) {
       throw new NotFoundException('Motel not found');
-    }
-    /* populate */
-    if ('join' in options) {
-      motel['address'] = plainToInstance(
-        AddressDto,
-        cloneDeep(motel.addressId),
-      );
     }
 
     return motel;
@@ -57,20 +43,28 @@ export class MotelsService {
     return await this.motelsRepository.save(
       this.motelsRepository.create({
         ...motelData,
-        addressId: address.id,
+        address: {
+          id: address.id,
+        },
       }),
     );
   }
 
   async update(id: string, motelData: CreateMotelDto) {
-    const motel = await this.motelsRepository.findOne({
+    const motelExisted = await this.motelsRepository.findOne({
       where: {
         id: id,
       },
-      loadRelationIds: true,
     });
 
-    await this.addressesService.update(motel.addressId, motelData.address);
+    if (!motelExisted) {
+      throw new BadRequestException('Motel not found');
+    }
+
+    await this.addressesService.update(
+      motelExisted.address.id,
+      motelData.address,
+    );
 
     return await this.motelsRepository.save({
       id: id,
@@ -85,7 +79,7 @@ export class MotelsService {
       },
       loadRelationIds: true,
     });
-    await this.addressesService.delete(motel.addressId);
+    await this.addressesService.delete(motel.address.id);
 
     return await this.motelsRepository.delete({
       id: id,

@@ -1,11 +1,17 @@
+import { Type } from 'class-transformer';
 import {
   IsEmail,
   IsEnum,
   IsOptional,
   IsString,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 import { Gender } from 'src/common/constants';
+import { Address } from '../../addresses/address.entity';
+import { AddressDto } from '../../addresses/dto/address.dto';
+import { RoleDto } from '../../roles/dto/role.dto';
+import { Role } from '../../roles/role.entity';
 
 export class CreateUserDto {
   @IsEmail()
