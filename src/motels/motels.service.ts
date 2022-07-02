@@ -55,6 +55,7 @@ export class MotelsService {
       where: {
         id: id,
       },
+      relations: ['address'],
     });
 
     if (!motelExisted) {

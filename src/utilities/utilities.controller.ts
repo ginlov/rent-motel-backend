@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { UtilitiesService } from './utilities.service';
 import { UtilityDto } from './dto/utility.dto';
 import { Serialize } from '../interceptors/serialize.interceptor';
@@ -22,6 +22,22 @@ export class UtilitiesController {
 
     return {
       message: 'Create utility successfully',
+      data: utility,
+    };
+  }
+
+  @Put('')
+  async updateUtility(
+    @Param('id') utilityId: string,
+    @Body() updateUtilityDto: CreateUtilityDto,
+  ): Promise<IResponse> {
+    const utility = await this.utilitiesService.update(
+      utilityId,
+      updateUtilityDto,
+    );
+
+    return {
+      message: 'Update utility successfully',
       data: utility,
     };
   }
