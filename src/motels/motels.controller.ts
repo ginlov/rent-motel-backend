@@ -34,7 +34,7 @@ export class MotelsController {
 
     const motels = await this.motelsService.find({
       ...filters,
-      relations: ['renterMotel'],
+      relations: ['address', 'renterMotel', 'motelUtility'],
     });
 
     return {

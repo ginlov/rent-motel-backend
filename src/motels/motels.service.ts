@@ -21,10 +21,7 @@ export class MotelsService {
   ) {}
 
   async find(options: FindManyOptions<Motel>) {
-    const motels = await this.motelsRepository.find({
-      ...options,
-      relations: ['address', 'renterMotel'],
-    });
+    const motels = await this.motelsRepository.find(options);
 
     return motels;
   }
