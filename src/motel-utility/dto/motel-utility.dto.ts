@@ -9,14 +9,13 @@ import {
 import { MotelDto } from '../../motels/dto/motel.dto';
 import { UtilityDto } from '../../utilities/dto/utility.dto';
 
-@Entity('motels')
-export class Motel {
+export class MotelUtilityDto {
   @Expose()
   id: string;
 
   @Type(() => MotelDto)
   @Expose()
-  motel: Motel;
+  motel: MotelDto;
 
   @Type(() => UtilityDto)
   @Expose()

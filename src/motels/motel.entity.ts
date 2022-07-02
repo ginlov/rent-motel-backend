@@ -19,17 +19,18 @@ export class Motel {
   @Column({ type: 'float' })
   price: number;
 
-  @JoinColumn({ name: 'address_id' })
   @OneToOne(() => Address, (address) => address.id)
+  @JoinColumn({ name: 'address_id' })
   address: Address;
 
-  @JoinColumn({ name: 'renter_motel_id' })
-  @OneToOne(() => RenterMotel, (renterMotel) => renterMotel.id)
+  @OneToOne(() => RenterMotel, (renterMotel) => renterMotel.motel)
   renterMotel: RenterMotel;
 
-  @JoinColumn({ name: 'motel_utility_id' })
-  @OneToMany(() => MotelUtility, (motelUtility) => motelUtility.id)
-  motelUtility: MotelUtility;
+  @OneToMany(() => MotelUtility, (motelUtility) => motelUtility.motel)
+  motelUtility: MotelUtility[];
+
+  @OneToMany(() => MotelUtility, (motelUtility) => motelUtility.motel)
+  status: number;
 
   @Column({ type: 'float', name: 'water_price' })
   waterPrice: number;

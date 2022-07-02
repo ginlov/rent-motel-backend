@@ -20,7 +20,7 @@ export class RenterMotelDto {
 
   @Type(() => MotelDto)
   @Expose()
-  motel: Motel;
+  motel: MotelDto;
 
   @Expose()
   startDate: Date;

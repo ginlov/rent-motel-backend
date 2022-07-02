@@ -28,14 +28,18 @@ export class RenterMotelService {
     }
 
     const renterMotelExisted = await this.renterMotelRepository.findOne({
-      where: {
-        renter: {
-          id: renterMotelData.renterId,
+      where: [
+        {
+          renter: {
+            id: renterMotelData.renterId,
+          },
         },
-        motel: {
-          id: renterMotelData.motelId,
+        {
+          motel: {
+            id: renterMotelData.motelId,
+          },
         },
-      },
+      ],
     });
 
     if (renterMotelExisted) {
