@@ -56,8 +56,6 @@ export class MotelUtilityService {
       },
     });
 
-    console.log(motelUtilityExisted);
-
     if (motelUtilityExisted) {
       throw new ConflictException('Utility existed in motel');
     }
@@ -73,4 +71,6 @@ export class MotelUtilityService {
       }),
     );
   }
+
+  async update(motelUtilityData: CreateMotelUtilityDto) {}
 }
