@@ -28,6 +28,9 @@ export class MotelDto {
   electricPrice: number;
 
   @Expose()
+  square: number;
+
+  @Expose()
   summary: string;
 
   @Expose()

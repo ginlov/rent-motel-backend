@@ -12,6 +12,9 @@ export class CreateMotelDto {
   @IsNumber()
   electricPrice: number;
 
+  @IsNumber()
+  square: number;
+
   @ValidateNested({ each: true })
   @Type(() => CreateAddressDto)
   address: CreateAddressDto;

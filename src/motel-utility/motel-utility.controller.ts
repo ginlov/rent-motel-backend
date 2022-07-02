@@ -1,32 +1,26 @@
-// import { Body, Controller, Post, UseGuards, Request } from '@nestjs/common';
-// import { AuthGuard } from '@nestjs/passport';
-// import { ApiBearerAuth } from '@nestjs/swagger';
-// import { IResponse } from '../common/interfaces';
-// import { CreateRenterMotelDto } from './dto/create-renter-motel.dto';
-// import { RenterMotelService } from './renter-motel.service';
+import { Body, Controller, Post, UseGuards, Request } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { IResponse } from '../common/interfaces';
+import { CreateMotelUtilityDto } from './dto/create-motel-utility.dto';
+import { MotelUtilityService } from './motel-utility.service';
 
-// @ApiBearerAuth()
-// @UseGuards(AuthGuard('jwt'))
-// @Controller('renter-motel')
-// export class RenterMotelController {
-//   constructor(private renterMotelService: RenterMotelService) {}
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
+@Controller('motel-utility')
+export class MotelUtilityController {
+  constructor(private motelUtitlityService: MotelUtilityService) {}
 
-//   @Post('')
-//   async createMotel(
-//     @Request() request,
-//     @Body() renterMotelData: CreateRenterMotelDto,
-//   ): Promise<IResponse> {
-//     const renterId = request.user.id;
+  @Post('')
+  async createMotelUitility(
+    @Request() request,
+    @Body() motelUtilityData: CreateMotelUtilityDto,
+  ): Promise<IResponse> {
+    const motel = await this.motelUtitlityService.create(motelUtilityData);
 
-//     renterMotelData.renterId = renterId;
-
-//     const motel = await this.renterMotelService.create({
-//       ...renterMotelData,
-//     });
-
-//     return {
-//       message: `Rent a motel with id \`${renterMotelData.motelId}\` successfully.`,
-//       data: motel,
-//     };
-//   }
-// }
+    return {
+      message: `Add utility successfully.`,
+      data: motel,
+    };
+  }
+}

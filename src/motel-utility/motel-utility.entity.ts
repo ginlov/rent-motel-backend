@@ -17,15 +17,18 @@ export class MotelUtility {
   id: string;
 
   @JoinColumn({ name: 'motel_id' })
-  @OneToOne((type) => Motel)
-  motelId: string;
+  @OneToOne(() => Motel, (motel) => motel.id)
+  motel: Motel;
 
   @JoinColumn({ name: 'utility_id' })
-  @OneToOne((type) => Utility)
-  utilityId: string;
+  @OneToOne(() => Utility, (utility) => utility.id)
+  utility: Utility;
 
   @Column()
-  status: string;
+  status: number;
+
+  @Column()
+  quantity: number
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;

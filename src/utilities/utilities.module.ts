@@ -6,7 +6,8 @@ import { Utility } from './utility.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Utility])],
-  controllers: [UtilitiesController],
+  exports: [UtilitiesService],
   providers: [UtilitiesService],
+  controllers: [UtilitiesController],
 })
 export class UtilitiesModule {}

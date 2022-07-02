@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import {
   Column,
   Entity,
@@ -6,20 +6,27 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { MotelDto } from '../../motels/dto/motel.dto';
+import { UtilityDto } from '../../utilities/dto/utility.dto';
 
 @Entity('motels')
 export class Motel {
   @Expose()
   id: string;
 
+  @Type(() => MotelDto)
   @Expose()
-  motelId: string;
+  motel: Motel;
+
+  @Type(() => UtilityDto)
+  @Expose()
+  utility: UtilityDto;
 
   @Expose()
-  utilityId: string;
+  status: number;
 
   @Expose()
-  status: string;
+  quantity: number;
 
   @Expose()
   updatedAt: Date;

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { cloneDeep } from 'lodash';
@@ -47,14 +51,20 @@ export class MotelsService {
   }
 
   async update(id: string, motelData: CreateMotelDto) {
-    const motel = await this.motelsRepository.findOne({
+    const motelExisted = await this.motelsRepository.findOne({
       where: {
         id: id,
       },
-      loadRelationIds: true,
     });
 
-    await this.addressesService.update(motel.address.id, motelData.address);
+    if (!motelExisted) {
+      throw new BadRequestException('Motel not found');
+    }
+
+    await this.addressesService.update(
+      motelExisted.address.id,
+      motelData.address,
+    );
 
     return await this.motelsRepository.save({
       id: id,

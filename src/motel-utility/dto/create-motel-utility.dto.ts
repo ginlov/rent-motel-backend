@@ -11,4 +11,7 @@ export class CreateMotelUtilityDto {
 
   @IsNumber()
   status: number;
+
+  @IsNumber()
+  quantity: number;
 }
