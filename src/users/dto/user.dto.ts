@@ -21,6 +21,7 @@ export class UserDto {
   @Expose()
   address: AddressDto;
 
+  @Type(() => RoleDto)
   @Expose()
   role: RoleDto;
 }
