@@ -32,19 +32,13 @@ export class MotelsController {
   async getMotels(@Query() query: QueryMotelList): Promise<IResponse> {
     const filters = transformQuery(query) as FindManyOptions<Motel>;
 
-    const options: FindManyOptions<Motel> = {
+    const motels = await this.motelsService.find({
       ...filters,
-      join: {
-        alias: 'motels',
-        leftJoinAndSelect: {
-          addresses: 'motels.addressId',
-        },
-      },
-    };
-    const motels = await this.motelsService.find(options);
+      relations: ['renterMotel'],
+    });
 
     return {
-      message: 'Get the list of motels successfully.',
+      message: 'Get the list of motels successfully',
       data: motels,
     };
   }
@@ -55,17 +49,11 @@ export class MotelsController {
       where: {
         id: motelId,
       },
-      join: {
-        alias: 'motels',
-        leftJoinAndSelect: {
-          addresses: 'motels.addressId',
-        },
-      },
     };
     const motel = await this.motelsService.findOne(options);
 
     return {
-      message: 'Get motel detail successfully.',
+      message: 'Get motel detail successfully',
       data: motel,
     };
   }
@@ -75,7 +63,7 @@ export class MotelsController {
     const motel = await this.motelsService.create(motelData);
 
     return {
-      message: 'Create motel successfully.',
+      message: 'Create motel successfully',
       data: motel,
     };
   }
@@ -88,7 +76,7 @@ export class MotelsController {
     const motel = await this.motelsService.update(motelId, motelData);
 
     return {
-      message: 'Update motel successfully.',
+      message: 'Update motel successfully',
       data: motel,
     };
   }
@@ -98,7 +86,7 @@ export class MotelsController {
     await this.motelsService.delete(motelId);
 
     return {
-      message: 'Delete motel successfully.',
+      message: 'Delete motel successfully',
     };
   }
 }

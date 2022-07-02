@@ -1,4 +1,4 @@
-import { Expose, Transform } from 'class-transformer';
+import { Expose, Transform, Type } from 'class-transformer';
 import { AddressDto } from '../../addresses/dto/address.dto';
 import { Role } from '../../common/constants';
 import { Serialize } from '../../interceptors/serialize.interceptor';
@@ -17,6 +17,7 @@ export class UserDto {
   @Expose()
   birthday: Date;
 
+  @Type(() => AddressDto)
   @Expose()
   address: AddressDto;
 

@@ -29,18 +29,12 @@ export class UsersController {
       where: {
         id: request.user.id,
       },
-      join: {
-        alias: 'users',
-        leftJoinAndSelect: {
-          roles: 'users.roleId',
-          addresses: 'users.addressId',
-        },
-      },
+      relations: ['address', 'role'],
     };
     const user = await this.usersService.findOne(options);
 
     return {
-      message: 'Get user profile successfully.',
+      message: 'Get user profile successfully',
       data: user,
     };
   }

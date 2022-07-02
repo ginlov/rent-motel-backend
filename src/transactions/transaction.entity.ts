@@ -14,12 +14,12 @@ export class Transaction {
   id: string;
 
   @JoinColumn({ name: 'user_id' })
-  @OneToOne((type) => User)
-  userId: string;
+  @OneToOne(() => User, (user) => user.id)
+  user: User;
 
   @JoinColumn({ name: 'motel_id' })
-  @OneToOne((type) => Motel)
-  motelId: string;
+  @OneToOne(() => Motel, (motel) => motel.id)
+  motel: Motel;
 
   @Column({ type: 'float' })
   electric_number: number;

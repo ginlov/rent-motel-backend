@@ -15,12 +15,12 @@ export class RenterMotel {
   id: string;
 
   @JoinColumn({ name: 'renter_id' })
-  @OneToOne((type) => User)
-  renterId: string;
+  @OneToOne(() => User, (user) => user.id)
+  renter: User;
 
   @JoinColumn({ name: 'motel_id' })
-  @OneToOne((type) => Motel)
-  motelId: string;
+  @OneToOne(() => Motel, (motel) => motel.id)
+  motel: Motel;
 
   @Column({ type: 'timestamp', name: 'start_date' })
   startDate: Date;
@@ -30,4 +30,7 @@ export class RenterMotel {
 
   @Column({ type: 'float' })
   deposit: number;
+
+  @Column({ type: 'int' })
+  status: number;
 }

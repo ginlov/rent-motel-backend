@@ -19,17 +19,6 @@ export class MotelsService {
   async find(options: FindManyOptions<Motel>) {
     const motels = await this.motelsRepository.find(options);
 
-    /* populate */
-    if ('join' in options) {
-      motels.forEach((motel) => {
-        motel['address'] = plainToInstance(
-          AddressDto,
-          cloneDeep(motel.addressId),
-        );
-        return motel;
-      });
-    }
-
     return motels;
   }
 
@@ -39,13 +28,6 @@ export class MotelsService {
       motel = await this.motelsRepository.findOne(options);
     } catch (error) {
       throw new NotFoundException('Motel not found');
-    }
-    /* populate */
-    if ('join' in options) {
-      motel['address'] = plainToInstance(
-        AddressDto,
-        cloneDeep(motel.addressId),
-      );
     }
 
     return motel;
@@ -57,7 +39,9 @@ export class MotelsService {
     return await this.motelsRepository.save(
       this.motelsRepository.create({
         ...motelData,
-        addressId: address.id,
+        address: {
+          id: address.id,
+        },
       }),
     );
   }
@@ -70,7 +54,7 @@ export class MotelsService {
       loadRelationIds: true,
     });
 
-    await this.addressesService.update(motel.addressId, motelData.address);
+    await this.addressesService.update(motel.address.id, motelData.address);
 
     return await this.motelsRepository.save({
       id: id,
@@ -85,7 +69,7 @@ export class MotelsService {
       },
       loadRelationIds: true,
     });
-    await this.addressesService.delete(motel.addressId);
+    await this.addressesService.delete(motel.address.id);
 
     return await this.motelsRepository.delete({
       id: id,

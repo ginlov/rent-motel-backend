@@ -15,24 +15,25 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: Partial<CreateUserDto>) {
+    console.log(createUserDto);
+
     return await this.usersRepository.save(
-      this.usersRepository.create(createUserDto),
+      this.usersRepository.create({
+        ...createUserDto,
+        address: {
+          id: createUserDto.addressId,
+        },
+        role: {
+          id: createUserDto.roleId,
+        },
+      }),
     );
   }
 
   async findOne(options: FindOneOptions<User>) {
-    let user: User;
-    try {
-      user = await this.usersRepository.findOne(options);
-    } catch (error) {
-      throw new NotFoundException('User not found');
-    }
+    console.log(options);
 
-    /* populate */
-    if ('join' in options) {
-      user['address'] = plainToInstance(AddressDto, cloneDeep(user.addressId));
-      user['role'] = plainToInstance(RoleDto, cloneDeep(user.roleId));
-    }
+    const user = await this.usersRepository.findOne(options);
 
     return user;
   }

@@ -19,7 +19,7 @@ export class AuthController {
     await this.authService.register(userRegisterData);
 
     return {
-      message: 'Create account successfully.',
+      message: 'Create account successfully',
     };
   }
 
@@ -30,7 +30,7 @@ export class AuthController {
     const token = await this.authService.login(userLoginData);
 
     return {
-      message: 'Login successfully.',
+      message: 'Login successfully',
       data: token,
     };
   }

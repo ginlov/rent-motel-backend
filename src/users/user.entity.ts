@@ -28,10 +28,10 @@ export class User {
   gender: Gender;
 
   @JoinColumn({ name: 'address_id' })
-  @OneToOne((type) => Address)
-  addressId: string;
+  @OneToOne(() => Address, (address) => address.id)
+  address: Address;
 
   @JoinColumn({ name: 'role_id' })
-  @ManyToOne((type) => Role)
-  roleId: string;
+  @ManyToOne(() => Role, (role) => role.id)
+  role: Role;
 }
