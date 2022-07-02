@@ -10,6 +10,10 @@ export class UtilitiesService {
     @InjectRepository(Utility) private utilitiesRepository: Repository<Utility>,
   ) {}
 
+  async find(options: FindOneOptions<Utility>) {
+    return await this.utilitiesRepository.find(options);
+  }
+
   async findOne(options: FindOneOptions<Utility>) {
     return await this.utilitiesRepository.findOne(options);
   }

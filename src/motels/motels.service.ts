@@ -21,7 +21,10 @@ export class MotelsService {
   ) {}
 
   async find(options: FindManyOptions<Motel>) {
-    const motels = await this.motelsRepository.find(options);
+    const motels = await this.motelsRepository.find({
+      ...options,
+      relations: ['address', 'renterMotel'],
+    });
 
     return motels;
   }
@@ -29,7 +32,10 @@ export class MotelsService {
   async findOne(options: FindOneOptions<Motel>) {
     let motel: Motel;
     try {
-      motel = await this.motelsRepository.findOne(options);
+      motel = await this.motelsRepository.findOne({
+        ...options,
+        relations: ['address', 'renterMotel'],
+      });
     } catch (error) {
       throw new NotFoundException('Motel not found');
     }

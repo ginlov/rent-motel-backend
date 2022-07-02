@@ -4,7 +4,7 @@ export interface IPaginationOptions {
 }
 
 export interface IResponse {
-  message: string;
+  message?: string;
   data?: any;
 }
 
