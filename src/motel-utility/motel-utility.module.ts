@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AddressesModule } from '../addresses/addresses.module';
 import { MotelsModule } from '../motels/motels.module';
@@ -10,7 +10,7 @@ import { MotelUtilityService } from './motel-utility.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([MotelUtility]),
-    MotelsModule,
+    forwardRef(() => MotelsModule),
     UtilitiesModule,
   ],
   exports: [MotelUtilityService],

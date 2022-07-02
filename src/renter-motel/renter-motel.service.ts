@@ -1,5 +1,7 @@
 import {
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -14,6 +16,7 @@ export class RenterMotelService {
   constructor(
     @InjectRepository(RenterMotel)
     private renterMotelRepository: Repository<RenterMotel>,
+    @Inject(forwardRef(() => MotelsService))
     private motelsService: MotelsService,
   ) {}
 

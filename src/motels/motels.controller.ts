@@ -49,6 +49,7 @@ export class MotelsController {
       where: {
         id: motelId,
       },
+      relations: ['address', 'renterMotel', 'motelUtility'],
     };
     const motel = await this.motelsService.findOne(options);
 

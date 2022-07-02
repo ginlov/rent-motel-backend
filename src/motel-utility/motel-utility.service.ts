@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -20,6 +22,7 @@ export class MotelUtilityService {
   constructor(
     @InjectRepository(MotelUtility)
     private motelUtilityRepository: Repository<MotelUtility>,
+    @Inject(forwardRef(() => MotelsService))
     private motelsService: MotelsService,
     private utilitiesService: UtilitiesService,
   ) {}
