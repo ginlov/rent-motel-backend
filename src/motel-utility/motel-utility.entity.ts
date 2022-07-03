@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -17,18 +18,18 @@ export class MotelUtility {
   id: string;
 
   @JoinColumn({ name: 'motel_id' })
-  @OneToOne(() => Motel, (motel) => motel.id)
+  @ManyToOne(() => Motel, (motel) => motel.id)
   motel: Motel;
 
   @JoinColumn({ name: 'utility_id' })
-  @OneToOne(() => Utility, (utility) => utility.id)
+  @ManyToOne(() => Utility, (utility) => utility.id)
   utility: Utility;
 
   @Column()
   status: number;
 
   @Column()
-  quantity: number
+  quantity: number;
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;

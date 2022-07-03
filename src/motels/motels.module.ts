@@ -6,13 +6,15 @@ import { MotelsController } from './motels.controller';
 import { AddressesModule } from '../addresses/addresses.module';
 import { RenterMotelModule } from '../renter-motel/renter-motel.module';
 import { MotelUtilityModule } from '../motel-utility/motel-utility.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Motel]),
     AddressesModule,
-    forwardRef(() => RenterMotelModule),
-    forwardRef(() => MotelUtilityModule),
+    RenterMotelModule,
+    MotelUtilityModule,
+    UsersModule,
   ],
   exports: [MotelsService],
   providers: [MotelsService],
