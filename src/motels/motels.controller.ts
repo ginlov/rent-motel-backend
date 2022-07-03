@@ -29,12 +29,12 @@ export class MotelsController {
   constructor(private motelsService: MotelsService) {}
 
   @Get('')
-  async getMotels(@Query() query: QueryMotelList): Promise<IResponse> {
+  async getMotelList(@Query() query: QueryMotelList): Promise<IResponse> {
     const filters = transformQuery(query) as FindManyOptions<Motel>;
 
     const motels = await this.motelsService.find({
       ...filters,
-      relations: ['address', 'renterMotel', 'motelUtility'],
+      relations: ['address', 'renterMotel', 'motelUtilities'],
     });
 
     return {
@@ -49,9 +49,9 @@ export class MotelsController {
       where: {
         id: motelId,
       },
-      relations: ['address', 'renterMotel', 'motelUtility'],
+      relations: ['address', 'renterMotel', 'motelUtilities'],
     };
-    const motel = await this.motelsService.findOne(options);
+    const motel = await this.motelsService.findOne(options, true);
 
     return {
       message: 'Get motel detail successfully',

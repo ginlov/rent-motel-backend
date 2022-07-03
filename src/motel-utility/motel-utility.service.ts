@@ -34,6 +34,8 @@ export class MotelUtilityService {
       },
     });
 
+    console.log(motelExisted);
+
     if (!motelExisted) {
       throw new BadRequestException('Motel Not found');
     }
@@ -73,6 +75,10 @@ export class MotelUtilityService {
         },
       }),
     );
+  }
+
+  async findOne(options: FindOneOptions) {
+    return await this.motelUtilityRepository.findOne(options);
   }
 
   async update(motelUtilityData: CreateMotelUtilityDto) {}

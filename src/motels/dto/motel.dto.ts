@@ -21,7 +21,7 @@ export class MotelDto {
 
   @Type(() => MotelUtilityDto)
   @Expose()
-  motelUtility: MotelUtilityDto;
+  motelUtilities: MotelUtilityDto[];
 
   @Expose()
   status: number;

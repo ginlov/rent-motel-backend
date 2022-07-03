@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { MotelsService } from '../motels/motels.service';
 import { CreateRenterMotelDto } from './dto/create-renter-motel.dto';
 import { RenterMotel } from './renter-motel.entity';
@@ -62,5 +62,9 @@ export class RenterMotelService {
         startDate: new Date(),
       }),
     );
+  }
+
+  async findOne(options: FindOneOptions<RenterMotel>) {
+    return await this.renterMotelRepository.findOne(options);
   }
 }

@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -27,7 +28,7 @@ export class Motel {
   renterMotel: RenterMotel;
 
   @OneToMany(() => MotelUtility, (motelUtility) => motelUtility.motel)
-  motelUtility: MotelUtility[];
+  motelUtilities: MotelUtility[];
 
   @OneToMany(() => MotelUtility, (motelUtility) => motelUtility.motel)
   status: number;
