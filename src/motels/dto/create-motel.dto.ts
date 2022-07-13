@@ -3,6 +3,9 @@ import { IsNumber, IsString, ValidateNested } from 'class-validator';
 import { CreateAddressDto } from '../../addresses/dto/create-address.dto';
 
 export class CreateMotelDto {
+  @IsString()
+  imageUrl: string;
+
   @IsNumber()
   price: number;
 
