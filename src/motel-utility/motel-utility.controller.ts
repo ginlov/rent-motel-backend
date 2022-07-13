@@ -21,7 +21,7 @@ export class MotelUtilityController {
 
   @Post('')
   async createMotelUitility(
-    @Request() request,
+    @Request() request: Request,
     @Body() motelUtilityData: CreateMotelUtilityDto,
   ): Promise<IResponse> {
     const motel = await this.motelUtitlityService.create(motelUtilityData);

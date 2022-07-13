@@ -8,10 +8,14 @@ import {
   Put,
   Query,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { Observable } from 'rxjs';
 import { FindManyOptions } from 'typeorm';
 import { IResponse, QueryMotelList } from '../common/interfaces';
 import { transformQuery } from '../common/utils';
@@ -90,4 +94,11 @@ export class MotelsController {
       message: 'Delete motel successfully',
     };
   }
+
+  // @Post('upload-image')
+  // @UseInterceptors(FileInterceptor('file'))
+  // uploadMotelImage(@UploadedFile() file, @Request() request) {
+  //   console.log(file);
+  //   return {};
+  // }
 }

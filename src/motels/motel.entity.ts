@@ -17,6 +17,9 @@ export class Motel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column()
+  imageUrl: string;
+
   @Column({ type: 'float' })
   price: number;
 
