@@ -17,6 +17,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { FindManyOptions } from 'typeorm';
+import { AwsS3Service } from '../aws/aws-s3.service';
 import { IResponse, QueryMotelList } from '../common/interfaces';
 import { transformQuery } from '../common/utils';
 import { Serialize } from '../interceptors/serialize.interceptor';
@@ -30,7 +31,10 @@ import { MotelsService } from './motels.service';
 @Serialize(MotelDto)
 @Controller('motels')
 export class MotelsController {
-  constructor(private motelsService: MotelsService) {}
+  constructor(
+    private motelsService: MotelsService,
+    private awsS3Service: AwsS3Service,
+  ) {}
 
   @Get('')
   async getMotelList(@Query() query: QueryMotelList): Promise<IResponse> {
@@ -95,10 +99,18 @@ export class MotelsController {
     };
   }
 
-  // @Post('upload-image')
-  // @UseInterceptors(FileInterceptor('file'))
-  // uploadMotelImage(@UploadedFile() file, @Request() request) {
-  //   console.log(file);
-  //   return {};
-  // }
+  @Post('upload-image')
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadMotelImage(
+    @UploadedFile() file,
+    @Request() request,
+  ): Promise<IResponse> {
+    const fileLocation = await this.awsS3Service.uploadFile(file);
+
+    return {
+      data: {
+        imageUrl: fileLocation,
+      },
+    };
+  }
 }
