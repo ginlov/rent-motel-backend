@@ -7,6 +7,8 @@ import { AddressesModule } from '../addresses/addresses.module';
 import { RenterMotelModule } from '../renter-motel/renter-motel.module';
 import { MotelUtilityModule } from '../motel-utility/motel-utility.module';
 import { UsersModule } from '../users/users.module';
+import { AppModule } from '../app.module';
+import { AwsModule } from '../aws/aws.module';
 
 @Module({
   imports: [
@@ -15,6 +17,7 @@ import { UsersModule } from '../users/users.module';
     RenterMotelModule,
     MotelUtilityModule,
     UsersModule,
+    AwsModule,
   ],
   exports: [MotelsService],
   providers: [MotelsService],
