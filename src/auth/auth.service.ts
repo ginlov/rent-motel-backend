@@ -70,7 +70,32 @@ export class AuthService {
 
     return {
       accessToken: token,
-      expiresIn: this.configService.get<string>('auth.expires'),
+      expiresIn: this.configService.get('auth.expires'),
+    };
+  }
+
+  async adminLogin(authLoginDto: AuthLoginDto) {
+    const user = await this.usersService.findOne({
+      where: {
+        email: authLoginDto.email,
+      },
+      relations: ['role'],
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Account does not exist');
+    }
+
+    if (!(await bcrypt.compare(authLoginDto.password, user.password)))
+      throw new UnauthorizedException('Invalid password');
+
+    const token = this.jwtService.sign({
+      id: user.id,
+    });
+
+    return {
+      accessToken: token,
+      expiresIn: this.configService.get('auth.expires'),
     };
   }
 }

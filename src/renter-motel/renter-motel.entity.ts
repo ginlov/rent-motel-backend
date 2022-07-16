@@ -31,6 +31,6 @@ export class RenterMotel {
   @Column({ type: 'float' })
   deposit: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 1 })
   status: number;
 }

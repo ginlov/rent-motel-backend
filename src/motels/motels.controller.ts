@@ -18,8 +18,10 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { FindManyOptions } from 'typeorm';
 import { AwsS3Service } from '../aws/aws-s3.service';
+import { Role } from '../common/constants';
 import { IResponse, QueryMotelList } from '../common/interfaces';
 import { transformQuery } from '../common/utils';
+import { RolesGuard } from '../guards/roles.guard';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { CreateMotelDto } from './dto/create-motel.dto';
 import { MotelDto } from './dto/motel.dto';
@@ -111,6 +113,20 @@ export class MotelsController {
       data: {
         imageUrl: fileLocation,
       },
+    };
+  }
+
+  // @UseGuards(new RolesGuard(Role.ADMIN))
+  @Post('public-motel/:id')
+  async publicMotel(
+    @Param('id') motelId,
+    @Request() request,
+  ): Promise<IResponse> {
+    const motel = await this.motelsService.publicMotel(motelId);
+
+    return {
+      message: 'Public motel successfully',
+      data: motel,
     };
   }
 }

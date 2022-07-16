@@ -131,4 +131,11 @@ export class MotelsService {
       id: id,
     });
   }
+
+  async publicMotel(motelId: string) {
+    return await this.motelsRepository.save({
+      id: motelId,
+      isPublic: true,
+    });
+  }
 }
