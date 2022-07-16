@@ -67,4 +67,11 @@ export class RenterMotelService {
   async findOne(options: FindOneOptions<RenterMotel>) {
     return await this.renterMotelRepository.findOne(options);
   }
+
+  async updateStatus(motelId: string, status: number) {
+    return await this.renterMotelRepository.save({
+      id: motelId,
+      status,
+    });
+  }
 }

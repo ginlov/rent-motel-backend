@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsBoolean, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { CreateAddressDto } from '../../addresses/dto/create-address.dto';
 
 export class CreateMotelDto {

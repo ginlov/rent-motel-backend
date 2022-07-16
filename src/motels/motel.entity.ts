@@ -33,8 +33,9 @@ export class Motel {
   @OneToMany(() => MotelUtility, (motelUtility) => motelUtility.motel)
   motelUtilities: MotelUtility[];
 
-  @OneToMany(() => MotelUtility, (motelUtility) => motelUtility.motel)
-  status: number;
+  @OneToMany(() => User, (user) => user.id)
+  @JoinColumn({ name: 'owner_id' })
+  owner: User;
 
   @Column({ type: 'float', name: 'water_price' })
   waterPrice: number;
@@ -50,4 +51,7 @@ export class Motel {
 
   @Column({ type: 'varchar' })
   description: string;
+
+  @Column({ name: 'is_public', default: false })
+  isPublic: boolean;
 }
