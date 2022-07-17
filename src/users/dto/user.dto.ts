@@ -1,6 +1,8 @@
 import { Address, GenderEnum, Role } from '@prisma/client';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+import { AddressDto } from '../../addresses/dto/address.dto';
+import { RoleDto } from '../../roles/dto/role.dto';
 
 export class UserDto {
   @Expose()
@@ -22,8 +24,10 @@ export class UserDto {
   gender: GenderEnum;
 
   @Expose()
-  role: Role;
+  @Type(() => RoleDto)
+  role: RoleDto;
 
   @Expose()
-  address: Address;
+  @Type(() => AddressDto)
+  address: AddressDto;
 }

@@ -40,13 +40,13 @@ export class UsersController {
   @Patch()
   @ApiOperation({ summary: 'Update my profile' })
   async update(
-    @GetUser() user: User,
     @Body() updateUserDto: UpdateUserDto,
+    @GetUser() user: User,
   ): Promise<IResponse> {
     await this.userService.update(user.id, updateUserDto);
 
     return {
-      statusCode: HttpStatus.NO_CONTENT,
+      statusCode: HttpStatus.OK,
       message: 'Update successfully.',
     };
   }

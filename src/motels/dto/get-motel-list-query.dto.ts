@@ -1,37 +1,10 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import {
-  IsBoolean,
-  IsEnum,
-  IsInt,
-  IsNumber,
-  IsOptional,
-  Min,
-} from 'class-validator';
-import { isFloat64Array } from 'util/types';
+import { IsEnum, IsInt, IsNumber, IsOptional, Min } from 'class-validator';
 import { MotelListOrderByEnum } from '../../constants';
+import { GetListQueryDto } from '../../dtos';
 
-export class GetMotelListQueryDto {
-  @Transform(({ value }) => parseInt(value))
-  @IsInt()
-  @Min(0)
-  @IsOptional()
-  @ApiPropertyOptional({
-    name: 'limit',
-    minimum: 0,
-  })
-  limit?: number;
-
-  @Transform(({ value }) => parseInt(value))
-  @IsInt()
-  @Min(1)
-  @IsOptional()
-  @ApiPropertyOptional({
-    name: 'offset',
-    minimum: 1,
-  })
-  offset?: number;
-
+export class GetMotelListQueryDto extends GetListQueryDto {
   @IsEnum(MotelListOrderByEnum)
   @IsOptional()
   @ApiPropertyOptional({
