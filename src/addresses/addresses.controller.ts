@@ -1,19 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { JwtGuard } from '../auth/guards/jwt.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
 import { AddressesService } from './addresses.service';
-import { CreateAddressDto } from './dto/create-address.dto';
-import { UpdateAddressDto } from './dto/update-address.dto';
 
 @Controller('addresses')
 @ApiTags('Address')

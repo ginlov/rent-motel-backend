@@ -3,9 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   HttpStatus,
   UseGuards,
   Query,
@@ -13,26 +11,17 @@ import {
 } from '@nestjs/common';
 import { MotelsService } from './motels.service';
 import { CreateMotelDto } from './dto/create-motel.dto';
-import { UpdateMotelDto } from './dto/update-motel.dto';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiQueryOptions,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IResponse } from '../interfaces';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { RoleEnum, User } from '@prisma/client';
-import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../auth/decorators/role.decorator';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { GetMotelListQueryDto } from './dto/get-motel-list-query.dto';
-import { MotelListOrderByEnum } from '../constants';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { MotelDto } from './dto/motel.dto';
 import { transformQuery } from '../utils';
-import { lte } from 'lodash';
 
 @Controller('motels')
 @ApiTags('Motel')

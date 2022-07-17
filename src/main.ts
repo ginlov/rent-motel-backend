@@ -1,11 +1,9 @@
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationError } from 'class-validator';
 import { AppModule } from './app.module';
-import { JwtGuard } from './auth/guards/jwt.guard';
-import { RolesGuard } from './auth/guards/roles.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,7 +11,20 @@ async function bootstrap() {
   /* Pipe */
   app.useGlobalPipes(
     new ValidationPipe({
+      transform: true,
+      forbidUnknownValues: true,
       whitelist: true,
+      validationError: {
+        target: false,
+      },
+      exceptionFactory: (validationErrors: ValidationError[]) => {
+        const errors = validationErrors.map((error) => ({
+          field: error.property,
+          message: Object.values(error.constraints)[0],
+        }));
+
+        return new BadRequestException(errors);
+      },
     }),
   );
 

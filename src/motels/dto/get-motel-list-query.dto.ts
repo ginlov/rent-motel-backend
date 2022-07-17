@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
   IsBoolean,
@@ -16,7 +16,7 @@ export class GetMotelListQueryDto {
   @IsInt()
   @Min(0)
   @IsOptional()
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: 'limit',
     minimum: 0,
   })
@@ -26,7 +26,7 @@ export class GetMotelListQueryDto {
   @IsInt()
   @Min(1)
   @IsOptional()
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: 'offset',
     minimum: 1,
   })
@@ -34,7 +34,7 @@ export class GetMotelListQueryDto {
 
   @IsEnum(MotelListOrderByEnum)
   @IsOptional()
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: 'order-by',
     enum: MotelListOrderByEnum,
   })
@@ -44,7 +44,7 @@ export class GetMotelListQueryDto {
   @IsNumber()
   @Min(0)
   @IsOptional()
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: 'price',
     minimum: 0,
     description: 'Max price',
@@ -55,7 +55,7 @@ export class GetMotelListQueryDto {
   @IsNumber()
   @Min(0)
   @IsOptional()
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: 'square',
     minimum: 0,
     description: 'Max square',
@@ -63,7 +63,7 @@ export class GetMotelListQueryDto {
   square?: number;
 
   @IsOptional()
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: 'district',
     description: 'District name',
   })
