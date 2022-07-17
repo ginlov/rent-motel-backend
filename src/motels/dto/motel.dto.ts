@@ -1,5 +1,5 @@
-import { Expose, Type } from 'class-transformer';
-import { AddressDto } from '../../addresses/dto/address.dto';
+import { Address } from '@prisma/client';
+import { Expose } from 'class-transformer';
 
 import { UserDto } from '../../users/dto/user.dto';
 
@@ -25,10 +25,8 @@ export class MotelDto {
   description: string;
 
   @Expose()
-  @Type(() => AddressDto)
-  address: AddressDto;
+  address: Address;
 
   @Expose()
-  @Type(() => UserDto)
   owner: UserDto;
 }

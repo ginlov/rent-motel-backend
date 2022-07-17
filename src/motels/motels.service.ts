@@ -54,34 +54,16 @@ export class MotelsService {
       where: {
         id: id,
       },
-      include: {
-        address: true,
-        owner: true,
-      },
     });
 
     return motel;
   }
 
-  async update(id: string, updateMotelDto: UpdateMotelDto) {
-    await this.prisma.motel.update({
-      where: {
-        id: id,
-      },
-      data: {
-        ...updateMotelDto,
-        address: {
-          update: updateMotelDto.address,
-        },
-      },
-    });
+  update(id: string, updateMotelDto: UpdateMotelDto) {
+    return `This action updates a #${id} motel`;
   }
 
-  async remove(id: string) {
-    await this.prisma.motel.delete({
-      where: {
-        id: id,
-      },
-    });
+  remove(id: string) {
+    return `This action removes a #${id} motel`;
   }
 }

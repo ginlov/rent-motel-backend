@@ -3,30 +3,36 @@ import {
   Get,
   Post,
   Body,
+  Patch,
   Param,
+  Delete,
   HttpStatus,
   UseGuards,
   Query,
   ValidationPipe,
-  Delete,
-  Patch,
-  ForbiddenException,
 } from '@nestjs/common';
 import { MotelsService } from './motels.service';
 import { CreateMotelDto } from './dto/create-motel.dto';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UpdateMotelDto } from './dto/update-motel.dto';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQueryOptions,
+  ApiTags,
+} from '@nestjs/swagger';
 import { IResponse } from '../interfaces';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { RoleEnum, User } from '@prisma/client';
+import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../auth/decorators/role.decorator';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { GetMotelListQueryDto } from './dto/get-motel-list-query.dto';
+import { MotelListOrderByEnum } from '../constants';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { MotelDto } from './dto/motel.dto';
 import { transformQuery } from '../utils';
-import { UpdateMotelDto } from './dto/update-motel.dto';
-import { GetListQueryDto } from '../dtos';
+import { lte } from 'lodash';
 
 @Controller('motels')
 @ApiTags('Motel')
@@ -40,8 +46,8 @@ export class MotelsController {
   @Roles(RoleEnum.OWNER)
   @ApiOperation({ summary: 'Create new motel - OWNER' })
   async create(
-    @Body() createMotelDto: CreateMotelDto,
     @GetUser() user: User,
+    @Body() createMotelDto: CreateMotelDto,
   ): Promise<IResponse> {
     const motel = await this.motelsService.create(user.id, createMotelDto);
 
@@ -54,7 +60,16 @@ export class MotelsController {
 
   @Get()
   @ApiOperation({ summary: 'Get motel list' })
-  async findAll(@Query() query: GetMotelListQueryDto): Promise<IResponse> {
+  async findAll(
+    @Query(
+      new ValidationPipe({
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+        forbidNonWhitelisted: true,
+      }),
+    )
+    query: GetMotelListQueryDto,
+  ): Promise<IResponse> {
     const data = await this.motelsService.findAll(
       {
         isPublic: true,
@@ -81,34 +96,7 @@ export class MotelsController {
 
     return {
       statusCode: HttpStatus.OK,
-      message: 'Get motel list successfully.',
-      data: data,
-    };
-  }
-
-  @Get('/owned')
-  @ApiOperation({ summary: 'Get my owned motel list' })
-  async findOwned(
-    @Query() query: GetListQueryDto,
-    @GetUser() user: User,
-  ): Promise<IResponse> {
-    const data = await this.motelsService.findAll(
-      {
-        ownerId: user.id,
-      },
-      {
-        skip: query.offset ? query.offset - 1 : undefined,
-        take: query.limit,
-        include: {
-          address: true,
-          owner: true,
-        },
-      },
-    );
-
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'Get motel list successfully.',
+      message: 'Get public motel list successfully.',
       data: data,
     };
   }
@@ -125,44 +113,13 @@ export class MotelsController {
     };
   }
 
-  @Patch(':id')
-  @Roles(RoleEnum.OWNER)
-  @ApiOperation({ summary: 'Update motel' })
-  async update(
-    @Param('id') id: string,
-    @Body() updateMotelDto: UpdateMotelDto,
-    @GetUser() user: User,
-  ): Promise<IResponse> {
-    const motel = await this.motelsService.findOne(id);
-    if (motel.ownerId !== user.id) {
-      throw new ForbiddenException('You are not the owner of this motel');
-    }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateMotelDto: UpdateMotelDto) {
+  //   return this.motelsService.update(id, updateMotelDto);
+  // }
 
-    await this.motelsService.update(id, updateMotelDto);
-
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'Update motel successfully.',
-    };
-  }
-
-  @Delete(':id')
-  @Roles(RoleEnum.OWNER)
-  @ApiOperation({ summary: 'Delete motel' })
-  async remove(
-    @Param('id') id: string,
-    @GetUser() user: User,
-  ): Promise<IResponse> {
-    const motel = await this.motelsService.findOne(id);
-    if (motel.ownerId !== user.id) {
-      throw new ForbiddenException('You are not the owner of this motel');
-    }
-
-    await this.motelsService.remove(id);
-
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'Deleted motel.',
-    };
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.motelsService.remove(id);
+  // }
 }

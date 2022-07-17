@@ -1,13 +1,40 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEnum, IsInt, IsNumber, IsOptional, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  Min,
+} from 'class-validator';
+import { isFloat64Array } from 'util/types';
 import { MotelListOrderByEnum } from '../../constants';
-import { GetListQueryDto } from '../../dtos';
 
-export class GetMotelListQueryDto extends GetListQueryDto {
+export class GetMotelListQueryDto {
+  @Transform(({ value }) => parseInt(value))
+  @IsInt()
+  @Min(0)
+  @IsOptional()
+  @ApiProperty({
+    name: 'limit',
+    minimum: 0,
+  })
+  limit?: number;
+
+  @Transform(({ value }) => parseInt(value))
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  @ApiProperty({
+    name: 'offset',
+    minimum: 1,
+  })
+  offset?: number;
+
   @IsEnum(MotelListOrderByEnum)
   @IsOptional()
-  @ApiPropertyOptional({
+  @ApiProperty({
     name: 'order-by',
     enum: MotelListOrderByEnum,
   })
@@ -17,7 +44,7 @@ export class GetMotelListQueryDto extends GetListQueryDto {
   @IsNumber()
   @Min(0)
   @IsOptional()
-  @ApiPropertyOptional({
+  @ApiProperty({
     name: 'price',
     minimum: 0,
     description: 'Max price',
@@ -28,7 +55,7 @@ export class GetMotelListQueryDto extends GetListQueryDto {
   @IsNumber()
   @Min(0)
   @IsOptional()
-  @ApiPropertyOptional({
+  @ApiProperty({
     name: 'square',
     minimum: 0,
     description: 'Max square',
@@ -36,7 +63,7 @@ export class GetMotelListQueryDto extends GetListQueryDto {
   square?: number;
 
   @IsOptional()
-  @ApiPropertyOptional({
+  @ApiProperty({
     name: 'district',
     description: 'District name',
   })

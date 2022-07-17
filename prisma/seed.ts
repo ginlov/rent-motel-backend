@@ -34,22 +34,6 @@ const main = async () => {
       { type: 'Quạt' },
     ],
   });
-
-  // /* Admin account */
-  // await prisma.user.delete({
-  //   where: {
-  //     email: 'admin',
-  //   },
-  // });
-  // await prisma.user.createMany({
-  //   data: [
-  //     {
-  //       email: 'admin',
-  //       password: 'admin',
-  //       firstName: ''
-  //     },
-  //   ],
-  // });
 };
 
 try {

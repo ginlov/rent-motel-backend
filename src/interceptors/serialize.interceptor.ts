@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 import { plainToInstance } from 'class-transformer';
 
 interface ClassConstructor {
-  new (...args: any[]): any;
+  new (...args: any[]): {};
 }
 
 export function Serialize(dto?: ClassConstructor) {
@@ -25,7 +25,7 @@ export class SerializeInterceptor implements NestInterceptor {
         let newData = null;
 
         if (this.dto) {
-          if (data.data?.items) {
+          if ('items' in data.data) {
             newData = data.data.items.forEach((dataItem: any) =>
               plainToInstance(this.dto, dataItem, {
                 excludeExtraneousValues: true,
