@@ -165,4 +165,19 @@ export class MotelsController {
       message: 'Deleted motel.',
     };
   }
+
+  @Post('admin/public-motel/:id')
+  @Roles(RoleEnum.ADMIN)
+  @ApiOperation({ summary: 'Public motel - ADMIN' })
+  async publicMotel(
+    @Param('id') id: string,
+    @Body('public') isPublic: boolean,
+  ): Promise<IResponse> {
+    await this.motelsService.updateIsPublic(id, isPublic);
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Update public status successfully',
+    };
+  }
 }

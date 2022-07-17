@@ -26,7 +26,7 @@ export class SerializeInterceptor implements NestInterceptor {
 
         if (this.dto) {
           if (data.data?.items) {
-            newData = data.data.items.forEach((dataItem: any) =>
+            newData = data.data.items.map((dataItem: any) =>
               plainToInstance(this.dto, dataItem, {
                 excludeExtraneousValues: true,
               }),

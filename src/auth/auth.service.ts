@@ -13,6 +13,8 @@ import { LoginDto } from './dto/login.dto';
 import { UsersService } from '../users/users.service';
 import { RolesService } from '../roles/roles.service';
 import { AddressesService } from '../addresses/addresses.service';
+import { RoleEnum } from '@prisma/client';
+import { LoginAdminDto } from './dto/login-admin.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +23,7 @@ export class AuthService {
     private jwtService: JwtService,
     private usersService: UsersService,
     private rolesService: RolesService,
-    private addressesService: AddressesService,
+    private configService: ConfigService,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -39,7 +41,10 @@ export class AuthService {
     });
 
     // hash password and create user
-    const hashedPassword = await bcrypt.hash(registerDto.password, 12);
+    const hashedPassword = await bcrypt.hash(
+      registerDto.password,
+      parseInt(this.configService.get('AUTH_SALT_ROUND')),
+    );
     const user = await this.prisma.user.create({
       data: {
         ...registerDto,
@@ -58,9 +63,18 @@ export class AuthService {
     return user;
   }
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto, isAdmin: boolean) {
     const userExisted = await this.usersService.findOne({
       email: loginDto.email,
+      role: {
+        name: isAdmin
+          ? {
+              equals: RoleEnum.ADMIN,
+            }
+          : {
+              not: RoleEnum.ADMIN,
+            },
+      },
     });
 
     if (!userExisted) {

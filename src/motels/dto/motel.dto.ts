@@ -18,6 +18,7 @@ export class MotelDto {
 
   @Expose()
   square: number;
+  
   @Expose()
   summary: string;
 

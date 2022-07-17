@@ -1,4 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, RoleEnum } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -35,21 +36,24 @@ const main = async () => {
     ],
   });
 
-  // /* Admin account */
-  // await prisma.user.delete({
-  //   where: {
-  //     email: 'admin',
-  //   },
-  // });
-  // await prisma.user.createMany({
-  //   data: [
-  //     {
-  //       email: 'admin',
-  //       password: 'admin',
-  //       firstName: ''
-  //     },
-  //   ],
-  // });
+  /* Admin account */
+  const roleAdmin = await prisma.role.findFirst({
+    where: {
+      name: RoleEnum.ADMIN,
+    },
+  });
+
+  await prisma.user.create({
+    data: {
+      email: 'admin',
+      password: bcrypt.hashSync('admin', parseInt(process.env.AUTH_SALT_ROUND)),
+      role: {
+        connect: {
+          id: roleAdmin.id,
+        },
+      },
+    },
+  });
 };
 
 try {

@@ -84,4 +84,15 @@ export class MotelsService {
       },
     });
   }
+
+  async updateIsPublic(id: string, isPublic: boolean) {
+    await this.prisma.motel.update({
+      where: {
+        id: id,
+      },
+      data: {
+        isPublic: isPublic,
+      },
+    });
+  }
 }

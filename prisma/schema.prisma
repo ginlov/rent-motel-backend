@@ -38,18 +38,18 @@ model Role {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  email     String     @unique
+  id        String      @id @default(uuid())
+  email     String      @unique
   password  String
-  firstName String     @map("first_name")
-  lastName  String     @map("last_name")
-  phone     String
-  gender    GenderEnum
-  roleId    String     @map("role_id")
-  addressId String     @unique @map("address_id")
+  firstName String?     @map("first_name")
+  lastName  String?     @map("last_name")
+  phone     String?
+  gender    GenderEnum?
+  roleId    String      @map("role_id")
+  addressId String?     @unique @map("address_id")
 
   role        Role         @relation(fields: [roleId], references: [id])
-  address     Address      @relation(fields: [addressId], references: [id])
+  address     Address?     @relation(fields: [addressId], references: [id])
   renterMotel RenterMotel?
   mails       Mail[]
   motel       Motel[]
