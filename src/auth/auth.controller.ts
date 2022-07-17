@@ -1,37 +1,53 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Serialize } from '../interceptors/serialize.interceptor';
+import { IResponse } from '../interfaces';
 import { AuthService } from './auth.service';
-import { AuthRegisterDto } from './dto/auth-register.dto';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
-import { AuthLoginDto } from './dto/auth-login.dto';
-import { UserDto } from '../users/dto/user.dto';
-import { TransformResponse } from '../interceptors/transform-response.interceptor';
-import { IResponse } from '../common/interfaces';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
+@Serialize()
+@ApiTags('Authentication')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private configService: ConfigService,
+  ) {}
 
-  @Serialize(UserDto)
   @Post('register')
-  async register(
-    @Body() userRegisterData: AuthRegisterDto,
-  ): Promise<IResponse> {
-    await this.authService.register(userRegisterData);
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Register' })
+  async register(@Body() registerDto: RegisterDto): Promise<IResponse> {
+    await this.authService.register(registerDto);
 
     return {
-      message: 'Create account successfully',
+      statusCode: HttpStatus.OK,
+      message: 'Register successfully.',
     };
   }
 
-  @TransformResponse()
-  @HttpCode(HttpStatus.OK)
   @Post('login')
-  async login(@Body() userLoginData: AuthLoginDto): Promise<IResponse> {
-    const token = await this.authService.login(userLoginData);
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Login' })
+  async login(@Body() loginDto: LoginDto): Promise<IResponse> {
+    const token = await this.authService.login(loginDto);
 
     return {
-      message: 'Login successfully',
-      data: token,
+      statusCode: HttpStatus.OK,
+      message: 'Login successfully.',
+      data: {
+        accessToken: token,
+        expiresIn: this.configService.get('AUTH_JWT_TOKEN_EXPIRES_IN'),
+      },
     };
   }
 }

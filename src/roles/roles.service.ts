@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
-import { Role } from './role.entity';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class RolesService {
-  constructor(
-    @InjectRepository(Role) private rolesRepository: Repository<Role>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  async findOne(options: FindOneOptions<Role>) {
-    return await this.rolesRepository.findOne(options);
+  async findOne(roleWhereInput: Prisma.RoleWhereInput) {
+    return await this.prisma.role.findFirst({
+      where: roleWhereInput,
+    });
   }
 }

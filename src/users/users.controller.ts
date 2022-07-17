@@ -1,41 +1,53 @@
 import {
+  Body,
   Controller,
   Get,
-  HttpCode,
   HttpStatus,
-  Request,
+  Patch,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { RoleEnum, User } from '@prisma/client';
+import { GetUser } from '../auth/decorators/get-user.decorator';
+import { Roles } from '../auth/decorators/role.decorator';
+import { JwtGuard } from '../auth/guards/jwt.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { Serialize } from '../interceptors/serialize.interceptor';
-import { IResponse } from '../common/interfaces';
+import { IResponse } from '../interfaces';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDto } from './dto/user.dto';
-import { User } from './user.entity';
-import { FindOneOptions } from 'typeorm';
+import { UsersService } from './users.service';
 
 @Controller('users')
+@Serialize(UserDto)
+@ApiTags('User')
+@UseGuards(JwtGuard, RolesGuard)
+@ApiBearerAuth()
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private userService: UsersService) {}
 
-  @Serialize(UserDto)
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
-  @HttpCode(HttpStatus.OK)
   @Get('me')
-  async getProfile(@Request() request): Promise<IResponse> {
-    const options: FindOneOptions<User> = {
-      where: {
-        id: request.user.id,
-      },
-      relations: ['address', 'role'],
+  @ApiOperation({ summary: 'Get my profile' })
+  async getProfile(@GetUser() user: User): Promise<IResponse> {
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Get user profile successfully.',
+      data: user,
     };
-    const user = await this.usersService.findOne(options);
+  }
+
+  @Patch()
+  @ApiOperation({ summary: 'Update my profile' })
+  async update(
+    @GetUser() user: User,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<IResponse> {
+    await this.userService.update(user.id, updateUserDto);
 
     return {
-      message: 'Get user profile successfully',
-      data: user,
+      statusCode: HttpStatus.NO_CONTENT,
+      message: 'Update successfully.',
     };
   }
 }

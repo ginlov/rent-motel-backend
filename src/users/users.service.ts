@@ -1,39 +1,32 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './user.entity';
-import { plainToInstance } from 'class-transformer';
-import { RoleDto } from '../roles/dto/role.dto';
-import { AddressDto } from '../addresses/dto/address.dto';
-import { cloneDeep } from 'lodash';
+import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(User) private usersRepository: Repository<User>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  async create(createUserDto: Partial<CreateUserDto>) {
-    console.log(createUserDto);
+  async findOne(userWhereInput: Prisma.UserWhereInput) {
+    const user = await this.prisma.user.findFirst({
+      where: userWhereInput,
+    });
 
-    return await this.usersRepository.save(
-      this.usersRepository.create({
-        ...createUserDto,
-        address: {
-          id: createUserDto.addressId,
-        },
-        role: {
-          id: createUserDto.roleId,
-        },
-      }),
-    );
+    return user;
   }
 
-  async findOne(options: FindOneOptions<User>) {
-    console.log(options);
-
-    const user = await this.usersRepository.findOne(options);
+  async update(userId: string, updateUserDto: UpdateUserDto) {
+    const user = await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        ...updateUserDto,
+        address: {
+          update: updateUserDto.address,
+        },
+      },
+    });
 
     return user;
   }

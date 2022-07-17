@@ -1,44 +1,49 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
-  IsBoolean,
-  IsDefined,
   IsNumber,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { CreateAddressDto } from '../../addresses/dto/create-address.dto';
+import { UpdateAddressDto } from '../../addresses/dto/update-address.dto';
+import { CreateMotelDto } from './create-motel.dto';
 
-export class CreateMotelDto {
+export class UpdateMotelDto extends PartialType(CreateMotelDto) {
   @ApiProperty({ example: 2000000 })
   @IsNumber()
-  price: number;
+  price?: number;
 
   @ApiProperty({ example: 3500 })
   @IsNumber()
-  electricPrice: number;
+  @IsOptional()
+  electricPrice?: number;
 
   @ApiProperty({ example: 4000 })
   @IsNumber()
-  waterPrice: number;
+  @IsOptional()
+  waterPrice?: number;
 
   @ApiProperty({ example: 20 })
   @IsNumber()
-  square: number;
+  @IsOptional()
+  square?: number;
 
   @ApiProperty({ example: 'Phòng trọ giá rẻ nhất Hà Nội' })
   @IsString()
-  summary: string;
+  @IsOptional()
+  summary?: string;
 
   @ApiProperty({
     example: 'Phong trọ rộng rãi, thoáng mát, được trang bị nhiều tiện nghi',
   })
   @IsString()
-  description: string;
+  @IsOptional()
+  description?: string;
 
   @ApiProperty()
   @ValidateNested({ each: true })
-  @Type(() => CreateAddressDto)
-  @IsDefined()
-  address: CreateAddressDto;
+  @Type(() => UpdateAddressDto)
+  @IsOptional()
+  address?: UpdateAddressDto;
 }

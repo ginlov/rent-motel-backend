@@ -12,7 +12,7 @@ interface ClassConstructor {
   new (...args: any[]): {};
 }
 
-export function Serialize(dto: ClassConstructor) {
+export function Serialize(dto?: ClassConstructor) {
   return UseInterceptors(new SerializeInterceptor(dto));
 }
 
@@ -22,12 +22,26 @@ export class SerializeInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, handler: CallHandler): Observable<any> {
     return handler.handle().pipe(
       map((data: any) => {
+        let newData = null;
+
+        if (this.dto) {
+          if ('items' in data.data) {
+            newData = data.data.items.forEach((dataItem: any) =>
+              plainToInstance(this.dto, dataItem, {
+                excludeExtraneousValues: true,
+              }),
+            );
+          } else {
+            newData = plainToInstance(this.dto, data.data, {
+              excludeExtraneousValues: true,
+            });
+          }
+        }
+
         return {
           statusCode: context.switchToHttp().getResponse().statusCode,
           message: data.message,
-          data: plainToInstance(this.dto, data.data, {
-            excludeExtraneousValues: true,
-          }),
+          data: newData ? newData : data.data,
         };
       }),
     );

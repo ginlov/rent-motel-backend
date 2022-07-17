@@ -1,101 +1,79 @@
 import {
-  Injectable,
+  BadRequestException,
   ConflictException,
+  Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-
-import { AddressesService } from '../addresses/addresses.service';
-import { RolesService } from '../roles/roles.service';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 import { UsersService } from '../users/users.service';
-import { AuthLoginDto } from './dto/auth-login.dto';
-import { AuthRegisterDto } from './dto/auth-register.dto';
+import { RolesService } from '../roles/roles.service';
+import { AddressesService } from '../addresses/addresses.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    private prisma: PrismaService,
     private jwtService: JwtService,
-    private configService: ConfigService,
+    private usersService: UsersService,
     private rolesService: RolesService,
     private addressesService: AddressesService,
   ) {}
 
-  async register(userRegisterData: AuthRegisterDto) {
+  async register(registerDto: RegisterDto) {
+    // check email is valid
     const userExisted = await this.usersService.findOne({
-      where: {
-        email: userRegisterData.email,
-      },
+      email: registerDto.email,
     });
     if (userExisted) {
-      throw new ConflictException('Email in use');
+      throw new BadRequestException('Email address already exists.');
     }
 
-    const address = await this.addressesService.create(
-      userRegisterData.address,
-    );
+    // find role id
     const role = await this.rolesService.findOne({
-      where: {
-        name: userRegisterData.role,
+      name: registerDto.role,
+    });
+
+    // hash password and create user
+    const hashedPassword = await bcrypt.hash(registerDto.password, 12);
+    const user = await this.prisma.user.create({
+      data: {
+        ...registerDto,
+        password: hashedPassword,
+        address: {
+          create: registerDto.address,
+        },
+        role: {
+          connect: {
+            id: role.id,
+          },
+        },
       },
     });
 
-    const hashedPassword = await bcrypt.hash(userRegisterData.password, 12);
-    userRegisterData.password = hashedPassword;
-
-    return await this.usersService.create({
-      ...userRegisterData,
-      addressId: address.id,
-      roleId: role.id,
-    });
+    return user;
   }
 
-  async login(userLoginData: AuthLoginDto) {
-    const user = await this.usersService.findOne({
-      where: {
-        email: userLoginData.email,
-      },
+  async login(loginDto: LoginDto) {
+    const userExisted = await this.usersService.findOne({
+      email: loginDto.email,
     });
-    if (!user) {
-      throw new UnauthorizedException('Account does not exist');
+
+    if (!userExisted) {
+      throw new UnauthorizedException('Email address is not correct.');
     }
-    if (!(await bcrypt.compare(userLoginData.password, user.password)))
+
+    if (!(await bcrypt.compare(loginDto.password, userExisted.password)))
       throw new UnauthorizedException('Invalid password');
 
     const token = this.jwtService.sign({
-      id: user.id,
+      id: userExisted.id,
     });
 
-    return {
-      accessToken: token,
-      expiresIn: this.configService.get('auth.expires'),
-    };
-  }
-
-  async adminLogin(authLoginDto: AuthLoginDto) {
-    const user = await this.usersService.findOne({
-      where: {
-        email: authLoginDto.email,
-      },
-      relations: ['role'],
-    });
-
-    if (!user) {
-      throw new UnauthorizedException('Account does not exist');
-    }
-
-    if (!(await bcrypt.compare(authLoginDto.password, user.password)))
-      throw new UnauthorizedException('Invalid password');
-
-    const token = this.jwtService.sign({
-      id: user.id,
-    });
-
-    return {
-      accessToken: token,
-      expiresIn: this.configService.get('auth.expires'),
-    };
+    return token;
   }
 }

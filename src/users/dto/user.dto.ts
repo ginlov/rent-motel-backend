@@ -1,10 +1,11 @@
-import { Expose, Transform, Type } from 'class-transformer';
-import { AddressDto } from '../../addresses/dto/address.dto';
-import { Role } from '../../common/constants';
-import { Serialize } from '../../interceptors/serialize.interceptor';
-import { RoleDto } from '../../roles/dto/role.dto';
+import { Address, GenderEnum, Role } from '@prisma/client';
+import { Expose } from 'class-transformer';
+import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class UserDto {
+  @Expose()
+  id: string;
+
   @Expose()
   email: string;
 
@@ -18,16 +19,11 @@ export class UserDto {
   phone: string;
 
   @Expose()
-  gender: string;
+  gender: GenderEnum;
 
   @Expose()
-  birthday: Date;
+  role: Role;
 
-  @Type(() => AddressDto)
   @Expose()
-  address: AddressDto;
-
-  @Type(() => RoleDto)
-  @Expose()
-  role: RoleDto;
+  address: Address;
 }

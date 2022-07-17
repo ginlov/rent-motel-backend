@@ -1,19 +1,30 @@
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
+import { AuthGuard } from '@nestjs/passport';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { JwtGuard } from './auth/guards/jwt.guard';
+import { RolesGuard } from './auth/guards/roles.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  /* cors */
+  /* Pipe */
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
+
+  /* Cors */
   app.enableCors();
 
-  /* configs */
+  /* Configs */
   const configService = app.get(ConfigService);
 
   /* API prefix */
-  app.setGlobalPrefix(configService.get('app.apiPrefix'), {
+  app.setGlobalPrefix(configService.get('API_PREFIX'), {
     exclude: ['/'],
   });
 

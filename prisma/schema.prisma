@@ -1,0 +1,149 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum GenderEnum {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum RoleEnum {
+  RENTER
+  OWNER
+  ADMIN
+}
+
+enum RenterMotelStatus {
+  PENDING
+  CONTACTED
+  RENTED
+}
+
+model Role {
+  id   String   @id @default(uuid())
+  name RoleEnum
+
+  users User[]
+
+  @@map("roles")
+}
+
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String
+  firstName String     @map("first_name")
+  lastName  String     @map("last_name")
+  phone     String
+  gender    GenderEnum
+  roleId    String     @map("role_id")
+  addressId String     @unique @map("address_id")
+
+  role        Role         @relation(fields: [roleId], references: [id])
+  address     Address      @relation(fields: [addressId], references: [id])
+  renterMotel RenterMotel?
+  mails       Mail[]
+  motel       Motel[]
+
+  @@map("users")
+}
+
+model Address {
+  id       String @id @default(uuid())
+  city     String
+  district String
+  ward     String
+  detail   String
+
+  user  User?
+  motel Motel?
+
+  @@map("addresses")
+}
+
+model Motel {
+  id            String  @id @default(uuid())
+  price         Float
+  electricPrice Float   @map("electric_price")
+  waterPrice    Float   @map("water_price")
+  square        Float
+  summary       String
+  description   String
+  isPublic      Boolean @map("is_public")
+  addressId     String  @unique @map("address_id")
+  ownerId       String  @map("owner_id")
+
+  address        Address        @relation(fields: [addressId], references: [id])
+  owner          User           @relation(fields: [ownerId], references: [id])
+  renterMotel    RenterMotel?
+  motelUtilities MotelUtility[]
+
+  @@map("motels")
+}
+
+model RenterMotel {
+  id        String            @id @default(uuid())
+  startDate DateTime          @map("start_date")
+  endDate   DateTime          @map("end_date")
+  deposit   Float
+  renterId  String            @unique @map("renter_id")
+  motelId   String            @unique @map("motel_id")
+  status    RenterMotelStatus
+
+  renter User  @relation(fields: [renterId], references: [id])
+  motel  Motel @relation(fields: [motelId], references: [id])
+
+  @@map("renter_motel")
+}
+
+model MotelUtility {
+  id        String   @id @default(uuid())
+  status    String
+  updatedAt DateTime @updatedAt @map("update_at")
+  motelId   String   @map("motel_id")
+  utilityId String   @map("utility_id")
+
+  motel   Motel   @relation(fields: [motelId], references: [id])
+  utility Utility @relation(fields: [utilityId], references: [id])
+
+  @@map("motel_utility")
+}
+
+model Utility {
+  id   String @id @default(uuid())
+  type String
+
+  motelUtilities MotelUtility[]
+
+  @@map("utilities")
+}
+
+model Transaction {
+  id             String @id @default(uuid())
+  electricNumber Float  @map("electric_number")
+  electricPrice  Float  @map("electric_price")
+  waterPrice     Float  @map("water_price")
+  waterNumber    Float  @map("water_number")
+
+  @@map("transactions")
+}
+
+model Mail {
+  id         String   @id @default(uuid())
+  content    String
+  createdAt  DateTime @default(now()) @map("created_at")
+  receiverId String   @map("receiver_id")
+
+  receiver User? @relation(fields: [receiverId], references: [id])
+
+  @@map("mails")
+}

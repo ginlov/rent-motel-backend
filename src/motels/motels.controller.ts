@@ -1,132 +1,125 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Param,
   Post,
-  Put,
-  Query,
-  Request,
-  UploadedFile,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpStatus,
   UseGuards,
-  UseInterceptors,
+  Query,
+  ValidationPipe,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth } from '@nestjs/swagger';
-import { Observable } from 'rxjs';
-import { FindManyOptions } from 'typeorm';
-import { AwsS3Service } from '../aws/aws-s3.service';
-import { Role } from '../common/constants';
-import { IResponse, QueryMotelList } from '../common/interfaces';
-import { transformQuery } from '../common/utils';
-import { RolesGuard } from '../guards/roles.guard';
-import { Serialize } from '../interceptors/serialize.interceptor';
-import { CreateMotelDto } from './dto/create-motel.dto';
-import { MotelDto } from './dto/motel.dto';
-import { Motel } from './motel.entity';
 import { MotelsService } from './motels.service';
+import { CreateMotelDto } from './dto/create-motel.dto';
+import { UpdateMotelDto } from './dto/update-motel.dto';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQueryOptions,
+  ApiTags,
+} from '@nestjs/swagger';
+import { IResponse } from '../interfaces';
+import { GetUser } from '../auth/decorators/get-user.decorator';
+import { RoleEnum, User } from '@prisma/client';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../auth/decorators/role.decorator';
+import { JwtGuard } from '../auth/guards/jwt.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { GetMotelListQueryDto } from './dto/get-motel-list-query.dto';
+import { MotelListOrderByEnum } from '../constants';
+import { Serialize } from '../interceptors/serialize.interceptor';
+import { MotelDto } from './dto/motel.dto';
+import { transformQuery } from '../utils';
+import { lte } from 'lodash';
 
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
-@Serialize(MotelDto)
 @Controller('motels')
+@ApiTags('Motel')
+@UseGuards(JwtGuard, RolesGuard)
+@ApiBearerAuth()
+@Serialize(MotelDto)
 export class MotelsController {
-  constructor(
-    private motelsService: MotelsService,
-    private awsS3Service: AwsS3Service,
-  ) {}
+  constructor(private readonly motelsService: MotelsService) {}
 
-  @Get('')
-  async getMotelList(@Query() query: QueryMotelList): Promise<IResponse> {
-    const filters = transformQuery(query) as FindManyOptions<Motel>;
-
-    const motels = await this.motelsService.find({
-      ...filters,
-      relations: ['address', 'renterMotel', 'motelUtilities'],
-    });
+  @Post()
+  @Roles(RoleEnum.OWNER)
+  @ApiOperation({ summary: 'Create new motel - OWNER' })
+  async create(
+    @GetUser() user: User,
+    @Body() createMotelDto: CreateMotelDto,
+  ): Promise<IResponse> {
+    const motel = await this.motelsService.create(user.id, createMotelDto);
 
     return {
-      message: 'Get the list of motels successfully',
-      data: motels,
+      statusCode: HttpStatus.CREATED,
+      message: 'Created motel.',
+      data: motel,
+    };
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Get motel list' })
+  async findAll(
+    @Query(
+      new ValidationPipe({
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+        forbidNonWhitelisted: true,
+      }),
+    )
+    query: GetMotelListQueryDto,
+  ): Promise<IResponse> {
+    const data = await this.motelsService.findAll(
+      {
+        isPublic: true,
+        price: {
+          lte: query.price,
+        },
+        square: {
+          lte: query.square,
+        },
+        address: {
+          district: query.district,
+        },
+      },
+      {
+        skip: query.offset ? query.offset - 1 : undefined,
+        take: query.limit,
+        orderBy: transformQuery(query['order-by']),
+        include: {
+          address: true,
+          owner: true,
+        },
+      },
+    );
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Get motel list successfully.',
+      data: data,
     };
   }
 
   @Get(':id')
-  async getMotelById(@Param('id') motelId: string): Promise<IResponse> {
-    const options: FindManyOptions<Motel> = {
-      where: {
-        id: motelId,
-      },
-      relations: ['address', 'renterMotel', 'motelUtilities'],
-    };
-    const motel = await this.motelsService.findOne(options, true);
+  @ApiOperation({ summary: 'Get motel by id' })
+  async findOne(@Param('id') id: string): Promise<IResponse> {
+    const motel = await this.motelsService.findOne(id);
 
     return {
-      message: 'Get motel detail successfully',
+      statusCode: HttpStatus.OK,
+      message: 'Get motel detail successfully.',
       data: motel,
     };
   }
 
-  @Post('')
-  async createMotel(@Body() motelData: CreateMotelDto): Promise<IResponse> {
-    const motel = await this.motelsService.create(motelData);
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateMotelDto: UpdateMotelDto) {
+  //   return this.motelsService.update(id, updateMotelDto);
+  // }
 
-    return {
-      message: 'Create motel successfully',
-      data: motel,
-    };
-  }
-
-  @Put(':id')
-  async updateMotel(
-    @Param('id') motelId: string,
-    @Body() motelData: CreateMotelDto,
-  ): Promise<IResponse> {
-    const motel = await this.motelsService.update(motelId, motelData);
-
-    return {
-      message: 'Update motel successfully',
-      data: motel,
-    };
-  }
-
-  @Delete(':id')
-  async deleteMotel(@Param('id') motelId: string): Promise<IResponse> {
-    await this.motelsService.delete(motelId);
-
-    return {
-      message: 'Delete motel successfully',
-    };
-  }
-
-  @Post('upload-image')
-  @UseInterceptors(FileInterceptor('image'))
-  async uploadMotelImage(
-    @UploadedFile() file,
-    @Request() request,
-  ): Promise<IResponse> {
-    const fileLocation = await this.awsS3Service.uploadFile(file);
-
-    return {
-      data: {
-        imageUrl: fileLocation,
-      },
-    };
-  }
-
-  // @UseGuards(new RolesGuard(Role.ADMIN))
-  @Post('public-motel/:id')
-  async publicMotel(
-    @Param('id') motelId,
-    @Request() request,
-  ): Promise<IResponse> {
-    const motel = await this.motelsService.publicMotel(motelId);
-
-    return {
-      message: 'Public motel successfully',
-      data: motel,
-    };
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.motelsService.remove(id);
+  // }
 }
