@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { RolesModule } from './roles/roles.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { MotelsModule } from './motels/motels.module';
+import { AwsModule } from './aws/aws.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { MotelsModule } from './motels/motels.module';
     RolesModule,
     AddressesModule,
     MotelsModule,
+    AwsModule,
   ],
   providers: [AuthService],
 })

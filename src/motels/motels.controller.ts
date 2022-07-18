@@ -7,10 +7,12 @@ import {
   HttpStatus,
   UseGuards,
   Query,
-  ValidationPipe,
   Delete,
   Patch,
   ForbiddenException,
+  UploadedFile,
+  UseInterceptors,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { MotelsService } from './motels.service';
 import { CreateMotelDto } from './dto/create-motel.dto';
@@ -27,16 +29,21 @@ import { MotelDto } from './dto/motel.dto';
 import { transformQuery } from '../utils';
 import { UpdateMotelDto } from './dto/update-motel.dto';
 import { GetListQueryDto } from '../dtos';
+import { AwsS3Service } from '../aws/aws-s3.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('motels')
 @ApiTags('Motel')
 @UseGuards(JwtGuard, RolesGuard)
 @ApiBearerAuth()
-@Serialize(MotelDto)
 export class MotelsController {
-  constructor(private readonly motelsService: MotelsService) {}
+  constructor(
+    private readonly motelsService: MotelsService,
+    private awsS3Service: AwsS3Service,
+  ) {}
 
   @Post()
+  @Serialize(MotelDto)
   @Roles(RoleEnum.OWNER)
   @ApiOperation({ summary: 'Create new motel - OWNER' })
   async create(
@@ -53,6 +60,7 @@ export class MotelsController {
   }
 
   @Get()
+  @Serialize(MotelDto)
   @ApiOperation({ summary: 'Get motel list' })
   async findAll(@Query() query: GetMotelListQueryDto): Promise<IResponse> {
     const data = await this.motelsService.findAll(
@@ -87,6 +95,7 @@ export class MotelsController {
   }
 
   @Get('/owned')
+  @Serialize(MotelDto)
   @ApiOperation({ summary: 'Get my owned motel list' })
   async findOwned(
     @Query() query: GetListQueryDto,
@@ -114,6 +123,7 @@ export class MotelsController {
   }
 
   @Get(':id')
+  @Serialize(MotelDto)
   @ApiOperation({ summary: 'Get motel by id' })
   async findOne(@Param('id') id: string): Promise<IResponse> {
     const motel = await this.motelsService.findOne(id);
@@ -155,7 +165,7 @@ export class MotelsController {
   ): Promise<IResponse> {
     const motel = await this.motelsService.findOne(id);
     if (motel.ownerId !== user.id) {
-      throw new ForbiddenException('You are not the owner of this motel');
+      throw new ForbiddenException('You are not the owner of this motel.');
     }
 
     await this.motelsService.remove(id);
@@ -177,7 +187,29 @@ export class MotelsController {
 
     return {
       statusCode: HttpStatus.OK,
-      message: 'Update public status successfully',
+      message: 'Update public status successfully.',
+    };
+  }
+
+  @Post('upload-image')
+  @Serialize()
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiOperation({ summary: 'Upload motel image' })
+  async uploadImage(
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<IResponse> {
+    if (!file.mimetype.includes('image')) {
+      throw new UnprocessableEntityException('File is not an image.');
+    }
+
+    const fileUrl = await this.awsS3Service.uploadFile(file);
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Upload image successfully.',
+      data: {
+        imageUrl: fileUrl,
+      },
     };
   }
 }
