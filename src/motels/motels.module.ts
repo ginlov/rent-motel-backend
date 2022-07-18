@@ -8,6 +8,7 @@ import { AwsModule } from '../aws/aws.module';
 
 @Module({
   imports: [PrismaModule, AddressesModule, UsersModule, AwsModule],
+  exports: [MotelsService],
   controllers: [MotelsController],
   providers: [MotelsService],
 })

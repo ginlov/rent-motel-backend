@@ -9,6 +9,8 @@ import { RolesModule } from './roles/roles.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { MotelsModule } from './motels/motels.module';
 import { AwsModule } from './aws/aws.module';
+import { UtilitiesModule } from './utilities/utilities.module';
+import { MotelUtilityModule } from './motel-utility/motel-utility.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { AwsModule } from './aws/aws.module';
     AddressesModule,
     MotelsModule,
     AwsModule,
+    UtilitiesModule,
+    MotelUtilityModule,
   ],
   providers: [AuthService],
 })

@@ -20,7 +20,6 @@ import { UserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
-@Serialize(UserDto)
 @ApiTags('User')
 @UseGuards(JwtGuard, RolesGuard)
 @ApiBearerAuth()
@@ -28,6 +27,7 @@ export class UsersController {
   constructor(private userService: UsersService) {}
 
   @Get('me')
+  @Serialize(UserDto)
   @ApiOperation({ summary: 'Get my profile' })
   async getProfile(@GetUser() user: User): Promise<IResponse> {
     return {

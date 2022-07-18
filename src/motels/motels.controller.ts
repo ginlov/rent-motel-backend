@@ -59,10 +59,34 @@ export class MotelsController {
     };
   }
 
-  @Get()
+  @Get('')
+  @Roles(RoleEnum.ADMIN)
+  @ApiOperation({ summary: 'Get all motel list - ADMIN' })
+  async findAll(@Query() query: GetListQueryDto): Promise<IResponse> {
+    const data = await this.motelsService.findAll(
+      {},
+      {
+        skip: query.offset ? query.offset - 1 : undefined,
+        take: query.limit,
+        orderBy: transformQuery(query['order-by']),
+        include: {
+          address: true,
+          owner: true,
+        },
+      },
+    );
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Get motel list successfully.',
+      data: data,
+    };
+  }
+
+  @Get('/public')
   @Serialize(MotelDto)
-  @ApiOperation({ summary: 'Get motel list' })
-  async findAll(@Query() query: GetMotelListQueryDto): Promise<IResponse> {
+  @ApiOperation({ summary: 'Get public motel list' })
+  async findPublic(@Query() query: GetMotelListQueryDto): Promise<IResponse> {
     const data = await this.motelsService.findAll(
       {
         isPublic: true,
@@ -89,14 +113,15 @@ export class MotelsController {
 
     return {
       statusCode: HttpStatus.OK,
-      message: 'Get motel list successfully.',
+      message: 'Get public motel list successfully.',
       data: data,
     };
   }
 
   @Get('/owned')
   @Serialize(MotelDto)
-  @ApiOperation({ summary: 'Get my owned motel list' })
+  @Roles(RoleEnum.OWNER)
+  @ApiOperation({ summary: 'Get my owned motel list - OWNER' })
   async findOwned(
     @Query() query: GetListQueryDto,
     @GetUser() user: User,
@@ -137,7 +162,7 @@ export class MotelsController {
 
   @Patch(':id')
   @Roles(RoleEnum.OWNER)
-  @ApiOperation({ summary: 'Update motel' })
+  @ApiOperation({ summary: 'Update motel - OWNER' })
   async update(
     @Param('id') id: string,
     @Body() updateMotelDto: UpdateMotelDto,
@@ -158,7 +183,7 @@ export class MotelsController {
 
   @Delete(':id')
   @Roles(RoleEnum.OWNER)
-  @ApiOperation({ summary: 'Delete motel' })
+  @ApiOperation({ summary: 'Delete motel - OWNER' })
   async remove(
     @Param('id') id: string,
     @GetUser() user: User,
@@ -193,8 +218,9 @@ export class MotelsController {
 
   @Post('upload-image')
   @Serialize()
+  @Roles(RoleEnum.OWNER)
   @UseInterceptors(FileInterceptor('image'))
-  @ApiOperation({ summary: 'Upload motel image' })
+  @ApiOperation({ summary: 'Upload motel image - OWNER' })
   async uploadImage(
     @UploadedFile() file: Express.Multer.File,
   ): Promise<IResponse> {

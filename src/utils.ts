@@ -1,6 +1,6 @@
 export const transformQuery = (orderBy: any) => {
   if (!orderBy) {
-    return null;
+    return undefined;
   }
 
   const [key, value] = orderBy.toString().split('_');

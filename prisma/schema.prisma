@@ -52,7 +52,7 @@ model User {
   address     Address?     @relation(fields: [addressId], references: [id])
   renterMotel RenterMotel?
   mails       Mail[]
-  motel       Motel[]
+  motels      Motel[]
 
   @@map("users")
 }
@@ -108,6 +108,7 @@ model RenterMotel {
 model MotelUtility {
   id        String   @id @default(uuid())
   status    String
+  quantity  Int
   updatedAt DateTime @updatedAt @map("update_at")
   motelId   String   @map("motel_id")
   utilityId String   @map("utility_id")
@@ -115,12 +116,13 @@ model MotelUtility {
   motel   Motel   @relation(fields: [motelId], references: [id])
   utility Utility @relation(fields: [utilityId], references: [id])
 
+  @@unique([motelId, utilityId])
   @@map("motel_utility")
 }
 
 model Utility {
   id   String @id @default(uuid())
-  type String
+  type String @unique
 
   motelUtilities MotelUtility[]
 
