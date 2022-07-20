@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, RenterMotelStatusEnum } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { UpdateAcceptedRentDto } from './dto/update-accepted-rent.dto';
-import { UpdateContactedRentDto } from './dto/update-contacted-rent';
+import { UpdateContactedDto } from './dto/update-contacted-rent';
+import { UpdateRentedDto } from './dto/update-rented-rent.dto';
 
 @Injectable()
 export class RenterMotelService {
@@ -47,12 +47,34 @@ export class RenterMotelService {
     });
   }
 
-  updateContacted(updateContactedRentDto: UpdateContactedRentDto) {
-    // return `This action updates a #${id} renterMotel`;
+  async updateContacted(updateContactedDto: UpdateContactedDto) {
+    return await this.prisma.renterMotel.update({
+      where: {
+        renterId_motelId: {
+          renterId: updateContactedDto.renterId,
+          motelId: updateContactedDto.motelId,
+        },
+      },
+      data: {
+        status: RenterMotelStatusEnum.CONTACTED,
+      },
+    });
   }
 
-  updateAccepted(updateAcceptedRentDto: UpdateAcceptedRentDto) {
-    // return `This action updates a #${id} renterMotel`;
+  async updateRented(updateRentedDto: UpdateRentedDto) {
+    return await this.prisma.renterMotel.update({
+      where: {
+        renterId_motelId: {
+          renterId: updateRentedDto.renterId,
+          motelId: updateRentedDto.motelId,
+        },
+      },
+      data: {
+        status: RenterMotelStatusEnum.CONTACTED,
+        startDate: new Date(),
+        deposit: updateRentedDto.deposit,
+      },
+    });
   }
 
   remove(id: number) {

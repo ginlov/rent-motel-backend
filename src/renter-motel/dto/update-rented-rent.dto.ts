@@ -1,6 +1,6 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString, Min } from 'class-validator';
 
-export class UpdateAcceptedRentDto {
+export class UpdateRentedDto {
   @IsString()
   renterId: string;
 
@@ -8,5 +8,6 @@ export class UpdateAcceptedRentDto {
   motelId: string;
 
   @IsNumber()
+  @Min(0)
   deposit: number;
 }

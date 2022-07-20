@@ -12,8 +12,6 @@ import {
 import { RenterMotelService } from './renter-motel.service';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { Role, RoleEnum, User } from '@prisma/client';
-import { UpdateAcceptedRentDto } from './dto/update-accepted-rent.dto';
-import { UpdateContactedRentDto } from './dto/update-contacted-rent';
 import { Roles } from '../auth/decorators/role.decorator';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guards/jwt.guard';
@@ -21,6 +19,10 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { MotelsService } from '../motels/motels.service';
 import { IResponse } from '../interfaces';
 import { GetRenterMotelListQueryDto } from './dto/get-renter-motel-list-query.dto';
+import { Serialize } from '../interceptors/serialize.interceptor';
+import { UpdateContactedDto } from './dto/update-contacted-rent';
+import { UpdateRentedDto } from './dto/update-rented-rent.dto';
+import { UsersService } from '../users/users.service';
 
 @Controller('')
 @ApiTags('Motel')
@@ -30,10 +32,12 @@ export class RenterMotelController {
   constructor(
     private readonly renterMotelService: RenterMotelService,
     private motelsServive: MotelsService,
+    private usersService: UsersService,
   ) {}
 
   @Post('rent-motel/:id')
   @Roles(RoleEnum.RENTER)
+  @Serialize()
   @ApiOperation({ summary: 'Rent a motel - RENTER' })
   async create(
     @Param('id') motelId: string,
@@ -62,6 +66,7 @@ export class RenterMotelController {
 
   @Get('renter-motel')
   @Roles(RoleEnum.ADMIN)
+  @Serialize()
   @ApiOperation({ summary: 'Get renter motel list - ADMIN' })
   async findAll(
     @Query() query: GetRenterMotelListQueryDto,
@@ -73,6 +78,10 @@ export class RenterMotelController {
       {
         take: query.limit,
         skip: query.offset,
+        include: {
+          motel: true,
+          renter: true,
+        },
       },
     );
 
@@ -90,16 +99,56 @@ export class RenterMotelController {
 
   @Post('update-contacted')
   @Roles(RoleEnum.ADMIN)
+  @Serialize()
   @ApiOperation({ summary: 'Update contacted status - ADMIN' })
-  updateContacted(@Body() updateContactedRentDto: UpdateContactedRentDto) {
-    return this.renterMotelService.updateContacted(updateContactedRentDto);
+  async updateContacted(
+    @Body() updateContactedDto: UpdateContactedDto,
+  ): Promise<IResponse> {
+    const userExisted = (await this.usersService.findOne(
+      {
+        id: updateContactedDto.renterId,
+      },
+      {
+        role: true,
+      },
+    )) as User & { role: Role };
+    if (!userExisted || userExisted.role.name !== RoleEnum.RENTER) {
+      throw new BadRequestException('Renter id is invalid.');
+    }
+
+    await this.renterMotelService.updateContacted(updateContactedDto);
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Update status to contacted successfully.',
+    };
   }
 
-  @Post('update-accepted')
+  @Post('update-rented')
   @Roles(RoleEnum.ADMIN)
-  @ApiOperation({ summary: 'Update accepted status - ADMIN' })
-  updateAccpted(@Body() updateRenterMotelDto: UpdateAcceptedRentDto) {
-    return this.renterMotelService.updateAccepted(updateRenterMotelDto);
+  @Serialize()
+  @ApiOperation({ summary: 'Update rented status - ADMIN' })
+  async updateAccpted(
+    @Body() updateRentedDto: UpdateRentedDto,
+  ): Promise<IResponse> {
+    const userExisted = (await this.usersService.findOne(
+      {
+        id: updateRentedDto.renterId,
+      },
+      {
+        role: true,
+      },
+    )) as User & { role: Role };
+    if (!userExisted || userExisted.role.name !== RoleEnum.RENTER) {
+      throw new BadRequestException('Renter id is invalid.');
+    }
+
+    await this.renterMotelService.updateRented(updateRentedDto);
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Update status to accpeted successfully.',
+    };
   }
 
   // @Delete(':id')

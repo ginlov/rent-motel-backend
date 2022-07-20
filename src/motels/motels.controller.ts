@@ -62,6 +62,7 @@ export class MotelsController {
   }
 
   @Get('')
+  @Serialize()
   @Roles(RoleEnum.ADMIN)
   @ApiOperation({ summary: 'Get all motel list - ADMIN' })
   async findAll(@Query() query: GetListQueryDto): Promise<IResponse> {

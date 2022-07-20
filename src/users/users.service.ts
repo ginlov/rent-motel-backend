@@ -8,9 +8,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findOne(userWhereInput: Prisma.UserWhereInput) {
+  async findOne(
+    userWhereInput: Prisma.UserWhereInput,
+    userInclude: Prisma.UserInclude = undefined,
+  ) {
     const user = await this.prisma.user.findFirst({
       where: userWhereInput,
+      include: userInclude,
     });
 
     return user;
