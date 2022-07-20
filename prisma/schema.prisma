@@ -22,7 +22,7 @@ enum RoleEnum {
   ADMIN
 }
 
-enum RenterMotelStatus {
+enum RenterMotelStatusEnum {
   PENDING
   CONTACTED
   RENTED
@@ -81,6 +81,7 @@ model Motel {
   isPublic      Boolean @map("is_public")
   addressId     String  @unique @map("address_id")
   ownerId       String  @map("owner_id")
+  imageUrl      String
 
   address        Address        @relation(fields: [addressId], references: [id])
   owner          User           @relation(fields: [ownerId], references: [id])
@@ -91,17 +92,18 @@ model Motel {
 }
 
 model RenterMotel {
-  id        String            @id @default(uuid())
-  startDate DateTime          @map("start_date")
-  endDate   DateTime          @map("end_date")
-  deposit   Float
-  renterId  String            @unique @map("renter_id")
-  motelId   String            @unique @map("motel_id")
-  status    RenterMotelStatus
+  id        String                @id @default(uuid())
+  startDate DateTime?             @map("start_date")
+  endDate   DateTime?             @map("end_date")
+  deposit   Float?
+  renterId  String                @unique @map("renter_id")
+  motelId   String                @unique @map("motel_id")
+  status    RenterMotelStatusEnum
 
   renter User  @relation(fields: [renterId], references: [id])
   motel  Motel @relation(fields: [motelId], references: [id])
 
+  @@unique([renterId, motelId])
   @@map("renter_motel")
 }
 

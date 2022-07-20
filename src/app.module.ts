@@ -11,6 +11,7 @@ import { MotelsModule } from './motels/motels.module';
 import { AwsModule } from './aws/aws.module';
 import { UtilitiesModule } from './utilities/utilities.module';
 import { MotelUtilityModule } from './motel-utility/motel-utility.module';
+import { RenterMotelModule } from './renter-motel/renter-motel.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { MotelUtilityModule } from './motel-utility/motel-utility.module';
     AwsModule,
     UtilitiesModule,
     MotelUtilityModule,
+    RenterMotelModule,
   ],
   providers: [AuthService],
 })

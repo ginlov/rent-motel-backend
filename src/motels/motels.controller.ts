@@ -13,6 +13,8 @@ import {
   UploadedFile,
   UseInterceptors,
   UnprocessableEntityException,
+  ParseBoolPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { MotelsService } from './motels.service';
 import { CreateMotelDto } from './dto/create-motel.dto';
@@ -153,6 +155,10 @@ export class MotelsController {
   async findOne(@Param('id') id: string): Promise<IResponse> {
     const motel = await this.motelsService.findOne(id);
 
+    if (!motel) {
+      throw new BadRequestException('Motel does not exist.');
+    }
+
     return {
       statusCode: HttpStatus.OK,
       message: 'Get motel detail successfully.',
@@ -206,7 +212,7 @@ export class MotelsController {
   @ApiOperation({ summary: 'Public motel - ADMIN' })
   async publicMotel(
     @Param('id') id: string,
-    @Body('public') isPublic: boolean,
+    @Body('public', ParseBoolPipe) isPublic: boolean,
   ): Promise<IResponse> {
     await this.motelsService.updateIsPublic(id, isPublic);
 

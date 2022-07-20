@@ -34,7 +34,7 @@ export class UtilitiesController {
     await this.utilitiesService.create(createUtilityDto);
 
     return {
-      statusCode: HttpStatus.OK,
+      statusCode: HttpStatus.CREATED,
       message: 'Create utility successfully.',
     };
   }

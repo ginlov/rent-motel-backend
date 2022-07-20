@@ -49,10 +49,11 @@ export class MotelsService {
     };
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, isPublic: boolean = undefined) {
     const motel = await this.prisma.motel.findFirst({
       where: {
         id: id,
+        isPublic: isPublic,
       },
       include: {
         address: true,

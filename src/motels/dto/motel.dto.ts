@@ -18,7 +18,7 @@ export class MotelDto {
 
   @Expose()
   square: number;
-  
+
   @Expose()
   summary: string;
 
@@ -32,4 +32,7 @@ export class MotelDto {
   @Expose()
   @Type(() => UserDto)
   owner: UserDto;
+
+  @Expose()
+  imageUrl: string;
 }
