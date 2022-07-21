@@ -77,7 +77,7 @@ export class RenterMotelController {
       },
       {
         take: query.limit,
-        skip: query.offset,
+        skip: query.offset ? query.offset - 1 : undefined,
         include: {
           motel: true,
           renter: true,

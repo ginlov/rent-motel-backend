@@ -33,6 +33,9 @@ import { UpdateMotelDto } from './dto/update-motel.dto';
 import { GetListQueryDto } from '../dtos';
 import { AwsS3Service } from '../aws/aws-s3.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { RequestPublicDto } from './dto/request-public.dto';
+import { PublicMotelDto } from './dto/public-motel.dto';
+import { query } from 'express';
 
 @Controller('motels')
 @ApiTags('Motel')
@@ -52,12 +55,11 @@ export class MotelsController {
     @Body() createMotelDto: CreateMotelDto,
     @GetUser() user: User,
   ): Promise<IResponse> {
-    const motel = await this.motelsService.create(user.id, createMotelDto);
+    await this.motelsService.create(user.id, createMotelDto);
 
     return {
       statusCode: HttpStatus.CREATED,
       message: 'Created motel.',
-      data: motel,
     };
   }
 
@@ -225,13 +227,34 @@ export class MotelsController {
   @ApiOperation({ summary: 'Public motel - ADMIN' })
   async publicMotel(
     @Param('id') id: string,
-    @Body('public', ParseBoolPipe) isPublic: boolean,
+    @Body() publicMotelDto: PublicMotelDto,
   ): Promise<IResponse> {
-    await this.motelsService.updateIsPublic(id, isPublic);
+    await this.motelsService.updateIsPublic(id, publicMotelDto.isPublic);
 
     return {
       statusCode: HttpStatus.OK,
       message: 'Update public status successfully.',
+    };
+  }
+
+  @Get('admin/request-public')
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get request public motels - ADMIN' })
+  async getRequestPublic(
+    @Body() requestPublic: RequestPublicDto,
+    @Query() query: GetListQueryDto,
+  ): Promise<IResponse> {
+    const motels = await this.motelsService.findAll(requestPublic, {
+      take: query.limit,
+      skip: query.offset ? query.offset - 1 : undefined,
+    });
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Get request public motels successfully.',
+      data: motels,
     };
   }
 

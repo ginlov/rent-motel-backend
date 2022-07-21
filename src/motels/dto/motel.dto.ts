@@ -35,6 +35,9 @@ export class MotelDto {
   owner: UserDto;
 
   @Expose()
+  requestPublic: boolean;
+
+  @Expose()
   imageUrl: string;
 
   @Expose()

@@ -79,6 +79,7 @@ model Motel {
   summary       String
   description   String
   isPublic      Boolean @map("is_public")
+  requestPublic Boolean @default(false) @map("request_public")
   addressId     String  @unique @map("address_id")
   ownerId       String  @map("owner_id")
   imageUrl      String

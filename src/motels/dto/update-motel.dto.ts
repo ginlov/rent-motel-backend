@@ -1,6 +1,7 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
@@ -35,7 +36,7 @@ export class UpdateMotelDto extends PartialType(CreateMotelDto) {
   summary?: string;
 
   @ApiProperty({
-    example: 'Phong trọ rộng rãi, thoáng mát, được trang bị nhiều tiện nghi',
+    example: 'Phòng trọ rộng rãi, thoáng mát, được trang bị nhiều tiện nghi',
   })
   @IsString()
   @IsOptional()
@@ -46,4 +47,11 @@ export class UpdateMotelDto extends PartialType(CreateMotelDto) {
   @Type(() => UpdateAddressDto)
   @IsOptional()
   address?: UpdateAddressDto;
+
+  @ApiProperty({
+    example: true,
+  })
+  @IsBoolean()
+  @IsOptional()
+  requestPublic?: boolean;
 }
