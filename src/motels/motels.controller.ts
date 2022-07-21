@@ -77,11 +77,6 @@ export class MotelsController {
         include: {
           address: true,
           owner: true,
-          motelUtilities: {
-            include: {
-              utility: true,
-            },
-          },
         },
       },
     );
@@ -117,11 +112,6 @@ export class MotelsController {
         include: {
           address: true,
           owner: true,
-          motelUtilities: {
-            include: {
-              utility: true,
-            },
-          },
         },
       },
     );
@@ -153,11 +143,6 @@ export class MotelsController {
         include: {
           address: true,
           owner: true,
-          motelUtilities: {
-            include: {
-              utility: true,
-            },
-          },
         },
       },
     );
