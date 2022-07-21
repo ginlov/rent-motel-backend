@@ -111,7 +111,7 @@ model MotelUtility {
   id        String   @id @default(uuid())
   status    String
   quantity  Int
-  updatedAt DateTime @updatedAt @map("update_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   motelId   String   @map("motel_id")
   utilityId String   @map("utility_id")
 

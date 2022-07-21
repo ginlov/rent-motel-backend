@@ -36,6 +36,8 @@ export class MotelsService {
       ...motelFindManyArgs,
     });
 
+    console.log(motels[1]['motelUtilities']);
+
     const motelsLength = (
       await this.prisma.motel.aggregate({
         where: motelWhereInput,
