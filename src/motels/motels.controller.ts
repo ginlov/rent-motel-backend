@@ -36,8 +36,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('motels')
 @ApiTags('Motel')
-@UseGuards(JwtGuard, RolesGuard)
-@ApiBearerAuth()
 export class MotelsController {
   constructor(
     private readonly motelsService: MotelsService,
@@ -47,6 +45,8 @@ export class MotelsController {
   @Post()
   @Serialize(MotelDto)
   @Roles(RoleEnum.OWNER)
+  @UseGuards(JwtGuard, RolesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create new motel - OWNER' })
   async create(
     @Body() createMotelDto: CreateMotelDto,
@@ -64,6 +64,8 @@ export class MotelsController {
   @Get('')
   @Serialize()
   @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtGuard, RolesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all motel list - ADMIN' })
   async findAll(@Query() query: GetListQueryDto): Promise<IResponse> {
     const data = await this.motelsService.findAll(
@@ -124,6 +126,8 @@ export class MotelsController {
   @Get('/owned')
   @Serialize(MotelDto)
   @Roles(RoleEnum.OWNER)
+  @UseGuards(JwtGuard, RolesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get my owned motel list - OWNER' })
   async findOwned(
     @Query() query: GetListQueryDto,
@@ -152,6 +156,8 @@ export class MotelsController {
 
   @Get(':id')
   @Serialize(MotelDto)
+  @UseGuards(JwtGuard, RolesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get motel by id' })
   async findOne(@Param('id') id: string): Promise<IResponse> {
     const motel = await this.motelsService.findOne(id);
@@ -169,6 +175,8 @@ export class MotelsController {
 
   @Patch(':id')
   @Roles(RoleEnum.OWNER)
+  @UseGuards(JwtGuard, RolesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update motel - OWNER' })
   async update(
     @Param('id') id: string,
@@ -190,6 +198,8 @@ export class MotelsController {
 
   @Delete(':id')
   @Roles(RoleEnum.OWNER)
+  @UseGuards(JwtGuard, RolesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete motel - OWNER' })
   async remove(
     @Param('id') id: string,
@@ -210,6 +220,8 @@ export class MotelsController {
 
   @Post('admin/public-motel/:id')
   @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtGuard, RolesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Public motel - ADMIN' })
   async publicMotel(
     @Param('id') id: string,
@@ -226,6 +238,8 @@ export class MotelsController {
   @Post('upload-image')
   @Serialize()
   @Roles(RoleEnum.OWNER)
+  @UseGuards(JwtGuard, RolesGuard)
+  @ApiBearerAuth()
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: 'Upload motel image - OWNER' })
   async uploadImage(
