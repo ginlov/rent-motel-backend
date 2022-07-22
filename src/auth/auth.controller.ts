@@ -6,19 +6,24 @@ import {
   HttpStatus,
   Post,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { RoleEnum } from '@prisma/client';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { RoleEnum, User } from '@prisma/client';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { IResponse } from '../interfaces';
 import { RolesService } from '../roles/roles.service';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
+import { GetUser } from './decorators/get-user.decorator';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { LoginAdminDto } from './dto/login-admin.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { JwtGuard } from './guards/jwt.guard';
+import { RolesGuard } from './guards/roles.guard';
 
 @Controller('auth')
 @Serialize()
@@ -88,7 +93,7 @@ export class AuthController {
       throw new UnauthorizedException('Email address is not correct.');
     }
 
-    const isMatch = this.authService.comparePassword(
+    const isMatch = await this.authService.comparePassword(
       userExisted.password,
       loginDto.password,
     );
@@ -126,7 +131,7 @@ export class AuthController {
       throw new UnauthorizedException('Email address is not correct.');
     }
 
-    const isMatch = this.authService.comparePassword(
+    const isMatch = await this.authService.comparePassword(
       userExisted.password,
       loginAdminDto.password,
     );
@@ -145,6 +150,36 @@ export class AuthController {
         accessToken: token,
         expiresIn: this.configService.get('AUTH_JWT_TOKEN_EXPIRES_IN'),
       },
+    };
+  }
+
+  @Post('change-password')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Change password' })
+  async changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,
+    @GetUser() user: User,
+  ): Promise<IResponse> {
+    const isMatch = this.authService.comparePassword(
+      user.password,
+      changePasswordDto.password,
+    );
+    if (!isMatch) {
+      throw new UnauthorizedException('Invalid password');
+    }
+
+    const newHashedPassword = await this.authService.hashPassword(
+      changePasswordDto.newPassword,
+    );
+    await this.usersService.update(user.id, {
+      password: newHashedPassword,
+    });
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Change password successfully.',
     };
   }
 }

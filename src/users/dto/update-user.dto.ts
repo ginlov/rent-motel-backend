@@ -8,7 +8,6 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { CreateAddressDto } from '../../addresses/dto/create-address.dto';
 import { UpdateAddressDto } from '../../addresses/dto/update-address.dto';
 
 export class UpdateUserDto {

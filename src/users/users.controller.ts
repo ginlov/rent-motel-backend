@@ -6,11 +6,9 @@ import {
   Patch,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RoleEnum, User } from '@prisma/client';
 import { GetUser } from '../auth/decorators/get-user.decorator';
-import { Roles } from '../auth/decorators/role.decorator';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Serialize } from '../interceptors/serialize.interceptor';

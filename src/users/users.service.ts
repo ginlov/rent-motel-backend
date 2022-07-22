@@ -24,7 +24,10 @@ export class UsersService {
     return await this.prisma.user.create(userCreateArgs);
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto & { password?: string },
+  ) {
     const user = await this.prisma.user.update({
       where: {
         id: id,

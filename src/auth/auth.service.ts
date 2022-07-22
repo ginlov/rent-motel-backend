@@ -10,7 +10,7 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
   constructor(private configService: ConfigService) {}
 
-  async hashPassword(password) {
+  async hashPassword(password: string) {
     return await bcrypt.hash(
       password,
       parseInt(this.configService.get('AUTH_SALT_ROUND')),
