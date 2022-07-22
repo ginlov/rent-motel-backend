@@ -13,6 +13,7 @@ import { UtilitiesModule } from './utilities/utilities.module';
 import { MotelUtilityModule } from './motel-utility/motel-utility.module';
 import { RenterMotelModule } from './renter-motel/renter-motel.module';
 import { ChatModule } from './chat/chat.module';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ChatModule } from './chat/chat.module';
     MotelUtilityModule,
     RenterMotelModule,
     ChatModule,
+    ReportsModule,
   ],
   providers: [AuthService],
 })

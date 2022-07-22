@@ -86,7 +86,7 @@ model Motel {
 
   address        Address        @relation(fields: [addressId], references: [id])
   owner          User           @relation(fields: [ownerId], references: [id])
-  renterMotel    RenterMotel?
+  renterMotel    RenterMotel[]
   motelUtilities MotelUtility[]
 
   @@map("motels")
@@ -116,8 +116,9 @@ model MotelUtility {
   motelId   String   @map("motel_id")
   utilityId String   @map("utility_id")
 
-  motel   Motel   @relation(fields: [motelId], references: [id])
-  utility Utility @relation(fields: [utilityId], references: [id])
+  motel   Motel    @relation(fields: [motelId], references: [id])
+  utility Utility  @relation(fields: [utilityId], references: [id])
+  reports Report[]
 
   @@unique([motelId, utilityId])
   @@map("motel_utility")
@@ -151,4 +152,16 @@ model Mail {
   receiver User? @relation(fields: [receiverId], references: [id])
 
   @@map("mails")
+}
+
+model Report {
+  id             String   @id @default(uuid())
+  status         Boolean  @default(false)
+  content        String
+  createdAt      DateTime @default(now()) @map("created_at")
+  motelUtilityId String
+
+  motelUtility MotelUtility @relation(fields: [motelUtilityId], references: [id])
+
+  @@map("reports")
 }

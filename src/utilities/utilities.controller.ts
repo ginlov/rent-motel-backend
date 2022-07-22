@@ -27,7 +27,13 @@ export class UtilitiesController {
   @Roles(RoleEnum.ADMIN)
   @ApiOperation({ summary: 'Create utility - ADMIN' })
   async create(@Body() createUtilityDto: CreateUtilityDto): Promise<IResponse> {
-    if (this.utilitiesService.findOne(createUtilityDto.type)) {
+    if (
+      this.utilitiesService.findOne({
+        where: {
+          type: createUtilityDto.type,
+        },
+      })
+    ) {
       throw new BadRequestException('The utility type already exists.');
     }
 

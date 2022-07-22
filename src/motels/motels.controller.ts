@@ -158,8 +158,6 @@ export class MotelsController {
 
   @Get(':id')
   @Serialize(MotelDto)
-  @UseGuards(JwtGuard, RolesGuard)
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get motel by id' })
   async findOne(@Param('id') id: string): Promise<IResponse> {
     const motel = await this.motelsService.findOne(id);

@@ -1,6 +1,7 @@
 import { Expose, Type } from 'class-transformer';
 import { AddressDto } from '../../addresses/dto/address.dto';
 import { MotelUtilityDto } from '../../motel-utility/dto/motel-utility.dto';
+import { RenterMotelDto } from '../../renter-motel/dto/renter-motel.dto';
 
 import { UserDto } from '../../users/dto/user.dto';
 
@@ -43,4 +44,8 @@ export class MotelDto {
   @Expose()
   @Type(() => MotelUtilityDto)
   motelUtilities: MotelUtilityDto[];
+
+  @Expose()
+  @Type(() => RenterMotelDto)
+  renterMotel: RenterMotelDto;
 }

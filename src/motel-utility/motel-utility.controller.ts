@@ -22,6 +22,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { MotelsService } from '../motels/motels.service';
 import { UpdateMotelUtilityDto } from './dto/update-motel-utility.dto';
 import { IResponse } from '../interfaces';
+import { UtilitiesService } from '../utilities/utilities.service';
 
 @Controller('motel-utility')
 @ApiTags('Motel')
@@ -30,7 +31,8 @@ import { IResponse } from '../interfaces';
 export class MotelUtilityController {
   constructor(
     private readonly motelUtilityService: MotelUtilityService,
-    private motelService: MotelsService,
+    private motelsService: MotelsService,
+    private utilitiesService: UtilitiesService,
   ) {}
 
   @Post('')
@@ -40,11 +42,20 @@ export class MotelUtilityController {
     @Body() createMotelUtilityDto: CreateMotelUtilityDto,
     @GetUser() user: User & { motels: Motel[] },
   ): Promise<IResponse> {
-    const motelExisted = await this.motelService.findOne(
+    const motelExisted = await this.motelsService.findOne(
       createMotelUtilityDto.motelId,
     );
     if (!motelExisted) {
       throw new BadRequestException('Motel not found.');
+    }
+
+    const utilityExisted = await this.utilitiesService.findOne({
+      where: {
+        id: createMotelUtilityDto.utilityId,
+      },
+    });
+    if (!utilityExisted) {
+      throw new BadRequestException('Utility not found.');
     }
 
     if (
@@ -78,7 +89,7 @@ export class MotelUtilityController {
     @Body() updateMotelUtilityDto: UpdateMotelUtilityDto,
     @GetUser() user: User & { motels: Motel[] },
   ): Promise<IResponse> {
-    const motelExisted = await this.motelService.findOne(
+    const motelExisted = await this.motelsService.findOne(
       updateMotelUtilityDto.motelId,
     );
     if (!motelExisted) {

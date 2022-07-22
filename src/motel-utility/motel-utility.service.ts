@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateMotelUtilityDto } from './dto/create-motel-utility.dto';
 import { UpdateMotelUtilityDto } from './dto/update-motel-utility.dto';
 import { pick } from 'lodash';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class MotelUtilityService {
@@ -18,8 +19,8 @@ export class MotelUtilityService {
     return `This action returns all motelUtility`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} motelUtility`;
+  async findOne(motelUtilityFindFirstArgs: Prisma.MotelUtilityFindFirstArgs) {
+    return await this.prisma.motelUtility.findFirst(motelUtilityFindFirstArgs);
   }
 
   async update(updateMotelUtilityDto: UpdateMotelUtilityDto) {

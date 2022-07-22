@@ -63,6 +63,11 @@ export class MotelsService {
             utility: true,
           },
         },
+        renterMotel: {
+          select: {
+            status: true,
+          },
+        },
       },
     });
 

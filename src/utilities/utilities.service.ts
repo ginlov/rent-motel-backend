@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { prisma } from '@prisma/client';
+import { Prisma, prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUtilityDto } from './dto/create-utility.dto';
 import { UpdateUtilityDto } from './dto/update-utility.dto';
@@ -18,12 +18,8 @@ export class UtilitiesService {
     return await this.prisma.utility.findMany();
   }
 
-  async findOne(type: string) {
-    return await this.prisma.utility.findUnique({
-      where: {
-        type: type,
-      },
-    });
+  async findOne(utilityFindUniqueArgs: Prisma.UtilityFindUniqueArgs) {
+    return await this.prisma.utility.findUnique(utilityFindUniqueArgs);
   }
 
   update(id: number, updateUtilityDto: UpdateUtilityDto) {
