@@ -47,6 +47,15 @@ export class RenterMotelService {
     });
   }
 
+  async getMyRentedMotel(renterId: string) {
+    return await this.prisma.renterMotel.findFirst({
+      where: {
+        renterId: renterId,
+        status: RenterMotelStatusEnum.RENTED,
+      },
+    });
+  }
+
   async updateContacted(updateContactedDto: UpdateContactedDto) {
     return await this.prisma.renterMotel.update({
       where: {
@@ -70,7 +79,7 @@ export class RenterMotelService {
         },
       },
       data: {
-        status: RenterMotelStatusEnum.CONTACTED,
+        status: RenterMotelStatusEnum.RENTED,
         startDate: new Date(),
       },
     });

@@ -271,7 +271,6 @@ export class MotelsController {
   @ApiConsumes('multipart/form')
   @ApiOperation({ summary: 'Upload motel image - OWNER' })
   async uploadImage(
-    @Body() uploadImageDto: UploadImageDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<IResponse> {
     if (!file.mimetype.includes('image')) {

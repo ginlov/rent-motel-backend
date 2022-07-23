@@ -23,6 +23,7 @@ import { Serialize } from '../interceptors/serialize.interceptor';
 import { UpdateContactedDto } from './dto/update-contacted-rent';
 import { UpdateRentedDto } from './dto/update-rented-rent.dto';
 import { UsersService } from '../users/users.service';
+import { MotelDto } from '../motels/dto/motel.dto';
 
 @Controller('')
 @ApiTags('Motel')
@@ -92,10 +93,22 @@ export class RenterMotelController {
     };
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.renterMotelService.findOne(+id);
-  // }
+  @Get('/my-rented-motel')
+  @Roles(RoleEnum.RENTER)
+  @Serialize(MotelDto)
+  @ApiOperation({ summary: 'Get my rented motel - RENTER' })
+  async findOne(@GetUser() user: User): Promise<IResponse> {
+    const motelId = (await this.renterMotelService.getMyRentedMotel(user.id))
+      .motelId;
+
+    const motel = await this.motelsServive.findOne(motelId);
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Get rented motel successfully.',
+      data: motel,
+    };
+  }
 
   @Post('update-contacted')
   @Roles(RoleEnum.ADMIN)
