@@ -8,6 +8,7 @@ import {
   Delete,
   HttpStatus,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
@@ -18,11 +19,15 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { User } from '@prisma/client';
+import { MotelsService } from '../motels/motels.service';
 
 @Controller('transactions')
 @ApiTags('Transaction')
 export class TransactionsController {
-  constructor(private readonly transactionsService: TransactionsService) {}
+  constructor(
+    private readonly transactionsService: TransactionsService,
+    private motelsService: MotelsService,
+  ) {}
 
   @Post()
   @UseGuards(JwtGuard, RolesGuard)
@@ -31,12 +36,26 @@ export class TransactionsController {
     @Body() createTransactionDto: CreateTransactionDto,
     @GetUser() user: User,
   ): Promise<IResponse> {
+    const { motelId, ...transactionData } = createTransactionDto;
+
+    const motelExisted = await this.motelsService.findOne(
+      createTransactionDto.motelId,
+    );
+    if (!motelExisted) {
+      throw new BadRequestException('Motel is not existed.');
+    }
+
     await this.transactionsService.create({
       data: {
-        ...createTransactionDto,
+        ...transactionData,
         user: {
           connect: {
             id: user.id,
+          },
+        },
+        motel: {
+          connect: {
+            id: createTransactionDto.motelId,
           },
         },
       },

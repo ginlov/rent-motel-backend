@@ -11,6 +11,7 @@ export class GetRenterMotelListQueryDto extends GetListQueryDto {
   @ApiPropertyOptional({
     name: 'status',
     description: 'Motel status',
+    enum: RenterMotelStatusEnum,
   })
   status?: RenterMotelStatusEnum;
 }

@@ -44,6 +44,7 @@ CREATE TABLE `motels` (
     `summary` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NOT NULL,
     `is_public` BOOLEAN NOT NULL,
+    `request_public` BOOLEAN NOT NULL DEFAULT false,
     `address_id` VARCHAR(191) NOT NULL,
     `owner_id` VARCHAR(191) NOT NULL,
     `imageUrl` VARCHAR(191) NOT NULL,
@@ -73,7 +74,7 @@ CREATE TABLE `motel_utility` (
     `id` VARCHAR(191) NOT NULL,
     `status` VARCHAR(191) NOT NULL,
     `quantity` INTEGER NOT NULL,
-    `update_at` DATETIME(3) NOT NULL,
+    `updated_at` DATETIME(3) NOT NULL,
     `motel_id` VARCHAR(191) NOT NULL,
     `utility_id` VARCHAR(191) NOT NULL,
 
@@ -93,10 +94,16 @@ CREATE TABLE `utilities` (
 -- CreateTable
 CREATE TABLE `transactions` (
     `id` VARCHAR(191) NOT NULL,
-    `electric_number` DOUBLE NOT NULL,
-    `electric_price` DOUBLE NOT NULL,
-    `water_price` DOUBLE NOT NULL,
-    `water_number` DOUBLE NOT NULL,
+    `electric_number` DOUBLE NULL,
+    `electric_price` DOUBLE NULL,
+    `water_price` DOUBLE NULL,
+    `water_number` DOUBLE NULL,
+    `total_price` DOUBLE NULL,
+    `image_bill` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `userId` VARCHAR(191) NOT NULL,
+    `motelId` VARCHAR(191) NOT NULL,
+    `isPaid` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -107,6 +114,17 @@ CREATE TABLE `mails` (
     `content` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `receiver_id` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `reports` (
+    `id` VARCHAR(191) NOT NULL,
+    `status` BOOLEAN NOT NULL DEFAULT false,
+    `content` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `motelUtilityId` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -136,4 +154,13 @@ ALTER TABLE `motel_utility` ADD CONSTRAINT `motel_utility_motel_id_fkey` FOREIGN
 ALTER TABLE `motel_utility` ADD CONSTRAINT `motel_utility_utility_id_fkey` FOREIGN KEY (`utility_id`) REFERENCES `utilities`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `transactions` ADD CONSTRAINT `transactions_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `transactions` ADD CONSTRAINT `transactions_motelId_fkey` FOREIGN KEY (`motelId`) REFERENCES `motels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `mails` ADD CONSTRAINT `mails_receiver_id_fkey` FOREIGN KEY (`receiver_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `reports` ADD CONSTRAINT `reports_motelUtilityId_fkey` FOREIGN KEY (`motelUtilityId`) REFERENCES `motel_utility`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -89,6 +89,7 @@ model Motel {
   owner          User           @relation(fields: [ownerId], references: [id])
   renterMotel    RenterMotel[]
   motelUtilities MotelUtility[]
+  transactions   Transaction[]
 
   @@map("motels")
 }
@@ -144,8 +145,11 @@ model Transaction {
   imageBill      String?  @map("image_bill")
   createdAt      DateTime @default(now())
   userId         String
+  motelId        String
+  isPaid         Boolean  @default(false)
 
-  user User @relation(fields: [userId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+  motel Motel @relation(fields: [motelId], references: [id])
 
   @@map("transactions")
 }
