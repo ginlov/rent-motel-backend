@@ -258,7 +258,6 @@ export class MotelsController {
 
   @Post('upload-image')
   @Serialize()
-  @Roles(RoleEnum.OWNER)
   @UseGuards(JwtGuard, RolesGuard)
   @ApiBearerAuth()
   @UseInterceptors(FileInterceptor('image'))
@@ -280,4 +279,6 @@ export class MotelsController {
       },
     };
   }
+
+  // @Post()
 }

@@ -103,6 +103,7 @@ export class MotelsService {
       },
       data: {
         isPublic: isPublic,
+        requestPublic: false,
       },
     });
   }

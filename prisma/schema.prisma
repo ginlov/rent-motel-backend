@@ -48,11 +48,12 @@ model User {
   roleId    String      @map("role_id")
   addressId String?     @unique @map("address_id")
 
-  role        Role         @relation(fields: [roleId], references: [id])
-  address     Address?     @relation(fields: [addressId], references: [id])
-  renterMotel RenterMotel?
-  mails       Mail[]
-  motels      Motel[]
+  role         Role          @relation(fields: [roleId], references: [id])
+  address      Address?      @relation(fields: [addressId], references: [id])
+  renterMotel  RenterMotel?
+  mails        Mail[]
+  motels       Motel[]
+  transactions Transaction[]
 
   @@map("users")
 }
@@ -134,11 +135,17 @@ model Utility {
 }
 
 model Transaction {
-  id             String @id @default(uuid())
-  electricNumber Float  @map("electric_number")
-  electricPrice  Float  @map("electric_price")
-  waterPrice     Float  @map("water_price")
-  waterNumber    Float  @map("water_number")
+  id             String   @id @default(uuid())
+  electricNumber Float?   @map("electric_number")
+  electricPrice  Float?   @map("electric_price")
+  waterPrice     Float?   @map("water_price")
+  waterNumber    Float?   @map("water_number")
+  totalPrice     Float?   @map("total_price")
+  imageBill      String?  @map("image_bill")
+  createdAt      DateTime @default(now())
+  userId         String
+
+  user User @relation(fields: [userId], references: [id])
 
   @@map("transactions")
 }

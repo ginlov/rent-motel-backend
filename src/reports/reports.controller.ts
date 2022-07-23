@@ -6,7 +6,6 @@ import {
   UseGuards,
   BadRequestException,
   Get,
-  Patch,
   Param,
 } from '@nestjs/common';
 import { ReportsService } from './reports.service';
