@@ -18,7 +18,13 @@ import {
 } from '@nestjs/common';
 import { MotelsService } from './motels.service';
 import { CreateMotelDto } from './dto/create-motel.dto';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { IResponse } from '../interfaces';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { RoleEnum, User } from '@prisma/client';
@@ -36,6 +42,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { RequestPublicDto } from './dto/request-public.dto';
 import { PublicMotelDto } from './dto/public-motel.dto';
 import { query } from 'express';
+import { UploadImageDto } from './dto/upload-image.dto';
 
 @Controller('motels')
 @ApiTags('Motel')
@@ -261,8 +268,10 @@ export class MotelsController {
   @UseGuards(JwtGuard, RolesGuard)
   @ApiBearerAuth()
   @UseInterceptors(FileInterceptor('image'))
+  @ApiConsumes('multipart/form')
   @ApiOperation({ summary: 'Upload motel image - OWNER' })
   async uploadImage(
+    @Body() uploadImageDto: UploadImageDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<IResponse> {
     if (!file.mimetype.includes('image')) {
