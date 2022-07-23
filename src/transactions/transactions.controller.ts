@@ -51,9 +51,10 @@ export class TransactionsController {
       throw new BadRequestException('Motel is not existed.');
     }
 
-    await this.transactionsService.create({
+    const transaction = await this.transactionsService.create({
       data: {
         ...transactionData,
+        totalPrice: motelExisted.price,
         renter: {
           connect: {
             id: user.id,
@@ -70,6 +71,7 @@ export class TransactionsController {
     return {
       statusCode: HttpStatus.CREATED,
       message: 'Created transaction.',
+      data: transaction,
     };
   }
 
