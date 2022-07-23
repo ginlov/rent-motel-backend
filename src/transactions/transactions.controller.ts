@@ -12,14 +12,16 @@ import {
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { UploadImageBill } from './dto/upload-image-bill.dto';
 import { IResponse } from '../interfaces';
 import { GetUser } from '../auth/decorators/get-user.decorator';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { User } from '@prisma/client';
+import { RoleEnum, User } from '@prisma/client';
 import { MotelsService } from '../motels/motels.service';
+import { Roles } from '../auth/decorators/role.decorator';
+import { ConfirmTransactionDto } from './dto/confirm-transaction.dto';
 
 @Controller('transactions')
 @ApiTags('Transaction')
@@ -31,7 +33,9 @@ export class TransactionsController {
 
   @Post()
   @UseGuards(JwtGuard, RolesGuard)
+  @Roles(RoleEnum.RENTER)
   @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create transaction - RENTER' })
   async create(
     @Body() createTransactionDto: CreateTransactionDto,
     @GetUser() user: User,
@@ -55,7 +59,7 @@ export class TransactionsController {
         },
         motel: {
           connect: {
-            id: createTransactionDto.motelId,
+            id: motelId,
           },
         },
       },
@@ -67,19 +71,71 @@ export class TransactionsController {
     };
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.transactionsService.findAll();
-  // }
+  @Post('/upload-image-bill/:id')
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles(RoleEnum.RENTER)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update image bill - RENTER' })
+  async updateImageBill(
+    @Param('id') id: string,
+    @Body() uploadImageBill: UploadImageBill,
+  ) {
+    const transactionExisted = await this.transactionsService.findOne(id);
+    if (!transactionExisted) {
+      throw new BadRequestException('Transaction is invalid.');
+    }
+
+    return await this.transactionsService.update(id, {
+      imageBill: uploadImageBill.imageUrl,
+    });
+  }
+
+  @Get()
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get transaction list - ADMIN' })
+  async findAll(): Promise<IResponse> {
+    const transactions = await this.transactionsService.findAll();
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Get transaction list successfully.',
+      data: transactions,
+    };
+  }
+
+  @Post('/confirm-transaction/:id')
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Confirm transaction - ADMIN' })
+  async confirmTransaction(
+    @Param('id') id: string,
+    @Body() confirmTransactionDto: ConfirmTransactionDto,
+  ): Promise<IResponse> {
+    const transactionExisted = await this.transactionsService.findOne(id);
+    if (!transactionExisted) {
+      throw new BadRequestException('Transaction is invalid.');
+    }
+
+    if (confirmTransactionDto.isConfirm) {
+      await this.transactionsService.update(id, {
+        isPaid: true,
+      });
+    } else {
+      await this.transactionsService.remove(id);
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Process successfully.',
+    };
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
   //   return this.transactionsService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateTransactionDto: UpdateTransactionDto) {
-  //   return this.transactionsService.update(+id, updateTransactionDto);
   // }
 
   // @Delete(':id')

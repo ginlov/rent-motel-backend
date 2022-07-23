@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
 
 @Injectable()
 export class TransactionsService {
@@ -12,19 +11,35 @@ export class TransactionsService {
     return await this.prisma.transaction.create(transactionCreateArgs);
   }
 
-  findAll() {
-    return `This action returns all transactions`;
+  async findAll() {
+    return await this.prisma.transaction.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} transaction`;
+  async findOne(id: string) {
+    return await this.prisma.transaction.findUnique({
+      where: {
+        id: id,
+      },
+    });
   }
 
-  update(id: number, updateTransactionDto: UpdateTransactionDto) {
-    return `This action updates a #${id} transaction`;
+  async update(
+    id: string,
+    transactionUpdateInput: Prisma.TransactionUpdateInput,
+  ) {
+    return await this.prisma.transaction.update({
+      where: {
+        id: id,
+      },
+      data: transactionUpdateInput,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
+  async remove(id: string) {
+    return await this.prisma.transaction.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }
