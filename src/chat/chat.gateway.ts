@@ -1,4 +1,4 @@
-import { BadGatewayException } from '@nestjs/common';
+import { BadGatewayException, ValidationPipe } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -9,7 +9,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { UsersService } from '../users/users.service';
 import { ChatService } from './chat.service';
-import { MessageSocketContent } from './dto/message-content.interface';
+import { MessageContentDto } from './dto/message-content.dto';
 
 @WebSocketGateway({
   cors: {
@@ -27,7 +27,13 @@ export class ChatGateway {
 
   @SubscribeMessage('message')
   async handleMessage(
-    @MessageBody() data: MessageSocketContent,
+    @MessageBody(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+      }),
+    )
+    data: MessageContentDto,
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
     const senderExisted = await this.usersService.findOne({
@@ -39,27 +45,26 @@ export class ChatGateway {
     const receiverExisted = await this.usersService.findOne({
       id: data.receiverId,
     });
-    console.log(receiverExisted);
 
     if (!receiverExisted) {
       throw new BadGatewayException('Receiver is invalid.');
     }
 
-    // const chat = await this.chatService.create({
-    //   data: {
-    //     message: data.message,
-    //     sender: {
-    //       connect: {
-    //         id: data.senderId,
-    //       },
-    //     },
-    //     receiver: {
-    //       connect: {
-    //         id: data.receiverId,
-    //       },
-    //     },
-    //   },
-    // });
+    const chat = await this.chatService.create({
+      data: {
+        message: data.message,
+        sender: {
+          connect: {
+            id: data.senderId,
+          },
+        },
+        receiver: {
+          connect: {
+            id: data.receiverId,
+          },
+        },
+      },
+    });
 
     this.server.to(client.id).emit('message', {
       message: data.message,

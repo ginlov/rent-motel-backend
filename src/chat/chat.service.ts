@@ -12,8 +12,15 @@ export class ChatService {
     return await this.prisma.chat.create(chatCreateArgs);
   }
 
-  findAll() {
-    return `This action returns all chat`;
+  async findAll(id: string) {
+    return await this.prisma.chat.findMany({
+      where: {
+        OR: {
+          receiverId: id,
+          senderId: id,
+        },
+      },
+    });
   }
 
   findOne(id: number) {
