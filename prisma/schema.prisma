@@ -145,12 +145,12 @@ model Transaction {
   totalPrice     Float?   @map("total_price")
   imageBill      String?  @map("image_bill")
   createdAt      DateTime @default(now())
-  userId         String
+  renterId       String
   motelId        String
   isPaid         Boolean  @default(false)
 
-  user  User  @relation(fields: [userId], references: [id])
-  motel Motel @relation(fields: [motelId], references: [id])
+  renter User  @relation(fields: [renterId], references: [id])
+  motel  Motel @relation(fields: [motelId], references: [id])
 
   @@map("transactions")
 }
@@ -179,9 +179,11 @@ model Report {
 }
 
 model Chat {
-  id         String @id @default(uuid())
-  senderId   String @map("sender_id")
-  receiverId String @map("receiver_id")
+  id         String   @id @default(uuid())
+  senderId   String   @map("sender_id")
+  receiverId String   @map("receiver_id")
+  message    String
+  createdAt  DateTime @default(now()) @map("created_at")
 
   sender   User @relation(fields: [senderId], references: [id], name: "chatSender")
   receiver User @relation(fields: [receiverId], references: [id], name: "chatReceiver")

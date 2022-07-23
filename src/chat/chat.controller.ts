@@ -15,10 +15,8 @@ import { UpdateChatDto } from './dto/update-chat.dto';
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
-  @Post()
-  async create(@Body() createChatDto: CreateChatDto) {
-    await this.chatService.create(createChatDto);
-  }
+  // @Post()
+  // async create(@Body() createChatDto: CreateChatDto) {}
 
   // @Get()
   // findAll() {

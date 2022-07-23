@@ -97,33 +97,6 @@ export class RenterMotelController {
   //   return this.renterMotelService.findOne(+id);
   // }
 
-  @Post('update-contacted')
-  @Roles(RoleEnum.ADMIN)
-  @Serialize()
-  @ApiOperation({ summary: 'Update contacted status - ADMIN' })
-  async updateContacted(
-    @Body() updateContactedDto: UpdateContactedDto,
-  ): Promise<IResponse> {
-    const userExisted = (await this.usersService.findOne(
-      {
-        id: updateContactedDto.renterId,
-      },
-      {
-        role: true,
-      },
-    )) as User & { role: Role };
-    if (!userExisted || userExisted.role.name !== RoleEnum.RENTER) {
-      throw new BadRequestException('Renter id is invalid.');
-    }
-
-    await this.renterMotelService.updateContacted(updateContactedDto);
-
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'Update status to contacted successfully.',
-    };
-  }
-
   @Post('update-rented')
   @Roles(RoleEnum.ADMIN)
   @Serialize()

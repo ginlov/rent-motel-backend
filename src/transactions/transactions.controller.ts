@@ -22,6 +22,7 @@ import { RoleEnum, User } from '@prisma/client';
 import { MotelsService } from '../motels/motels.service';
 import { Roles } from '../auth/decorators/role.decorator';
 import { ConfirmTransactionDto } from './dto/confirm-transaction.dto';
+import { RenterMotelService } from '../renter-motel/renter-motel.service';
 
 @Controller('transactions')
 @ApiTags('Transaction')
@@ -29,6 +30,7 @@ export class TransactionsController {
   constructor(
     private readonly transactionsService: TransactionsService,
     private motelsService: MotelsService,
+    private renterMotelService: RenterMotelService,
   ) {}
 
   @Post()
@@ -52,7 +54,7 @@ export class TransactionsController {
     await this.transactionsService.create({
       data: {
         ...transactionData,
-        user: {
+        renter: {
           connect: {
             id: user.id,
           },
@@ -122,6 +124,10 @@ export class TransactionsController {
     if (confirmTransactionDto.isConfirm) {
       await this.transactionsService.update(id, {
         isPaid: true,
+      });
+      await this.renterMotelService.updateRented({
+        motelId: transactionExisted.motelId,
+        renterId: transactionExisted.renterId,
       });
     } else {
       await this.transactionsService.remove(id);

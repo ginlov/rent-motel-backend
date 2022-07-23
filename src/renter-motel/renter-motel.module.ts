@@ -8,6 +8,7 @@ import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [PrismaModule, MotelsModule, UsersModule],
+  exports: [RenterMotelService],
   controllers: [RenterMotelController],
   providers: [RenterMotelService],
 })
