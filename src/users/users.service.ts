@@ -10,7 +10,7 @@ export class UsersService {
 
   async findOne(
     userWhereInput: Prisma.UserWhereInput,
-    userInclude?: Prisma.UserInclude,
+    userInclude?: Prisma.UserInclude ,
   ) {
     const user = await this.prisma.user.findFirst({
       where: userWhereInput,

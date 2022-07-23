@@ -97,16 +97,16 @@ export class RenterMotelController {
   //   return this.renterMotelService.findOne(+id);
   // }
 
-  @Post('update-rented')
+  @Post('update-contacted')
   @Roles(RoleEnum.ADMIN)
   @Serialize()
-  @ApiOperation({ summary: 'Update rented status - ADMIN' })
-  async updateAccpted(
-    @Body() updateRentedDto: UpdateRentedDto,
+  @ApiOperation({ summary: 'Update contacted status - ADMIN' })
+  async updateContacted(
+    @Body() updateContactedDto: UpdateContactedDto,
   ): Promise<IResponse> {
     const userExisted = (await this.usersService.findOne(
       {
-        id: updateRentedDto.renterId,
+        id: updateContactedDto.renterId,
       },
       {
         role: true,
@@ -116,11 +116,11 @@ export class RenterMotelController {
       throw new BadRequestException('Renter id is invalid.');
     }
 
-    await this.renterMotelService.updateRented(updateRentedDto);
+    await this.renterMotelService.updateContacted(updateContactedDto);
 
     return {
       statusCode: HttpStatus.OK,
-      message: 'Update status to accpeted successfully.',
+      message: 'Update status to contacted successfully.',
     };
   }
 

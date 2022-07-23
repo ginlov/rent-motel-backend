@@ -1,3 +1,4 @@
+import { BadGatewayException } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -6,8 +7,9 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { UsersService } from '../users/users.service';
 import { ChatService } from './chat.service';
-import { MessageBodyDto } from './dto/message-body.dto';
+import { MessageSocketContent } from './dto/message-content.interface';
 
 @WebSocketGateway({
   cors: {
@@ -16,32 +18,51 @@ import { MessageBodyDto } from './dto/message-body.dto';
   },
 })
 export class ChatGateway {
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    private usersService: UsersService,
+  ) {}
 
   @WebSocketServer() server: Server;
 
   @SubscribeMessage('message')
   async handleMessage(
-    @MessageBody() data: MessageBodyDto,
+    @MessageBody() data: MessageSocketContent,
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
-    console.log(data);
+    const senderExisted = await this.usersService.findOne({
+      id: data.senderId,
+    });
+    if (!senderExisted) {
+      throw new BadGatewayException('Sender is invalid.');
+    }
+    const receiverExisted = await this.usersService.findOne({
+      id: data.receiverId,
+    });
+    console.log(receiverExisted);
 
-    // await this.chatService.create({
+    if (!receiverExisted) {
+      throw new BadGatewayException('Receiver is invalid.');
+    }
+
+    // const chat = await this.chatService.create({
     //   data: {
+    //     message: data.message,
     //     sender: {
     //       connect: {
-    //         id: '',
+    //         id: data.senderId,
     //       },
     //     },
     //     receiver: {
     //       connect: {
-    //         id: '',
+    //         id: data.receiverId,
     //       },
     //     },
     //   },
     // });
 
-    this.server.to(client.id).emit('message', data.id);
+    this.server.to(client.id).emit('message', {
+      message: data.message,
+    });
   }
 }
