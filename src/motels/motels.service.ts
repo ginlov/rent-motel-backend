@@ -64,8 +64,8 @@ export class MotelsService {
           },
         },
         renterMotel: {
-          select: {
-            status: true,
+          include: {
+            renter: true,
           },
         },
       },

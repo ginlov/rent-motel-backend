@@ -54,6 +54,8 @@ model User {
   mails        Mail[]
   motels       Motel[]
   transactions Transaction[]
+  chatSender   Chat[]        @relation(name: "chatSender")
+  chatReceiver Chat[]        @relation(name: "chatReceiver")
 
   @@map("users")
 }
@@ -98,7 +100,6 @@ model RenterMotel {
   id        String                @id @default(uuid())
   startDate DateTime?             @map("start_date")
   endDate   DateTime?             @map("end_date")
-  deposit   Float?
   renterId  String                @unique @map("renter_id")
   motelId   String                @unique @map("motel_id")
   status    RenterMotelStatusEnum
@@ -170,9 +171,18 @@ model Report {
   status         Boolean  @default(false)
   content        String
   createdAt      DateTime @default(now()) @map("created_at")
-  motelUtilityId String
+  motelUtilityId String   @map("motel_utility_id")
 
   motelUtility MotelUtility @relation(fields: [motelUtilityId], references: [id])
 
   @@map("reports")
+}
+
+model Chat {
+  id         String @id @default(uuid())
+  senderId   String @map("sender_id")
+  receiverId String @map("receiver_id")
+
+  sender   User @relation(fields: [senderId], references: [id], name: "chatSender")
+  receiver User @relation(fields: [receiverId], references: [id], name: "chatReceiver")
 }

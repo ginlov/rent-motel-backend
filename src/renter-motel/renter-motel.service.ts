@@ -72,7 +72,6 @@ export class RenterMotelService {
       data: {
         status: RenterMotelStatusEnum.CONTACTED,
         startDate: new Date(),
-        deposit: updateRentedDto.deposit,
       },
     });
   }
