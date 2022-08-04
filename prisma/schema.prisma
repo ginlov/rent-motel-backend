@@ -80,7 +80,7 @@ model Motel {
   waterPrice    Float   @map("water_price")
   square        Float
   summary       String
-  description   String
+  description   String  @db.LongText()
   isPublic      Boolean @map("is_public")
   requestPublic Boolean @default(false) @map("request_public")
   addressId     String  @unique @map("address_id")

@@ -1,0 +1,128 @@
+[
+  {
+    "price": 3000000,
+    "electricPrice": 3500,
+    "waterPrice": 4000,
+    "square": 20,
+    "summary": "Phòng Trọ 238 Âu Cơ, 20m2, Nhà Mới Sàn Gỗ, Full Đồ",
+    "description": "Đc: số 12a ngõ 238 ngách 2 Âu Cơ\nCho thuê phòng trọ 238 Âu Cơ,\nNhà mới, sàn gỗ, full đồ, đh, giường tủ, nl, bếp. 2 phòng chung 1wc\nGiá 3tr đến 3tr7\nĐiện, 4k, nước 100k/người, mạng 100k 1p, dv 100k\nGiới hạn 2 người ở\nKhông cho thợ xây thuê",
+    "address": {
+      "create": {
+        "city": "Hà Nội",
+        "district": "Tây Hồ",
+        "ward": "Quảng An",
+        "detail": "Ngõ 200 Đường Âu Cơ"
+      }
+    },
+    "isPublic": true,
+    "imageUrl": "https://cdn.chotot.com/FDrgBrw2YwbaHmBlsgLuE0l5LU_4YRpU1TnnIrP0ulU/preset:view/plain/b320c013dec7c801590542409ffe4e05-2783284863327582416.jpg"
+  },
+  {
+    "price": 2800000,
+    "electricPrice": 3900,
+    "waterPrice": 4000,
+    "square": 30,
+    "summary": "CHO THUÊ PHÒNG TRỌ TẠI LÒ ĐÚC-CẢM HỘI-NGUYỄN CAO.",
+    "description": "CHÍNH CHỦ CHO THUÊ PHÒNG TẠI LÒ ĐÚC.\n- Mình còn trống phòng ở tầng 2 và tầng3 trong nhà nguyên căn 4tầng tại Cảmn Hội - Lò Đúc.\n- Wc chung với phòng đối diện.\n- có đh, nl, giường tủ, máy giặt.\n- không chung chủ. H giấc tự do.\n- giá 2,8tr",
+    "address": {
+      "create": {
+        "city": "Hà Nội",
+        "district": "Hai Bà Trưng",
+        "ward": "Đống Mác",
+        "detail": "12 Lò Đúc"
+      }
+    },
+    "isPublic": true,
+    "imageUrl": "https://cdn.chotot.com/8dUbNX7yeE-gT8hTeXI1W4JqNh_5ofrLJxciDWU9fR0/preset:view/plain/126d9c7717b0328ac9cd312b4c7b6800-2784244055944637799.jpg"
+  },
+  {
+    "price": 2700000,
+    "electricPrice": 3500,
+    "waterPrice": 3800,
+    "square": 25,
+    "summary": "Fuldo, giá 2,7tr, 30m² , 317 ngõ quỳnh",
+    "description": "\n LH TRỰC TIẾP, KO NT .\n - Cho thuê p 317 ngõ quỳnh , bên cạnh trường ĐH kinh tế quốc dân, ĐH bách khoa, ĐH mở, ĐH xây dựng...\n GIÁ : 2,7tr - 3,5tr\n - fulLdồ: Điều hòa, Nóng lạnh, giường ,tủ, đầy đủ ...ace đến chỉ việc ở thôi .\n - Miễn phí : rác , gửi xe ,wifi ...\n - giờ giấc tự do không chung chủ.\n - Đc :Ngõ 317 ngõ quỳnh , hai bà trưng.\n",
+    "address": {
+      "create": {
+        "city": "Hà Nội",
+        "district": "Hai Bà Trưng",
+        "ward": "Quỳnh Lôi",
+        "detail": "317 Ngõ Quỳnh"
+      }
+    },
+    "isPublic": true,
+    "imageUrl": "https://cdn.chotot.com/KQU6lbhmLA8dxYQkSJzvnC3eQVRrrQtMM_FLSwc39kw/preset:view/plain/92c1ac2711d6a4abb9efe9a631782ecf-2783743745582959854.jpg"
+  },
+  {
+    "price": 2500000,
+    "electricPrice": 3000,
+    "waterPrice": 4000,
+    "square": 30,
+    "summary": "Chính chủ cho thuê T1 số nhà 8/145 Trần Hữu Tước",
+    "description": "\n Nhà có 3 tầng, hiện tại còn trống tầng 1 cho thuê, phòng rộng rãi, thoáng mát, thoải mái có thể ở 2-3ng. Giá 2tr5. Công tơ riêng. Điện 3k/1 số, nước 90k/1ng. Không chung chủ, giờ giấc thoải mái.\n Có chỗ để xe, phòng ngủ bên trong tách riêng với khu vực nấu ăn, giặt dũ bên ngoài, vệ sinh khép kín, có nóng lạnh. Hàng xóm tầng 2, tầng 3 thân thiện , zui zẻ, toàn các bạn trẻ SV đi học, đi làm.\n Nhà gần chợ Nam Đồng, Hồ Đắc Di mấy bước chân cực kì thuận tiện đi lại, mua sắm.\n Phòng sẵn, có thể vào ở luôn.\n Bạn nào qua xem alo mình nhé.\n",
+    "address": {
+      "create": {
+        "city": "Hà Nội",
+        "district": "Đống Đa",
+        "ward": "Nam Đồng",
+        "detail": "số nhà 8 ngõ 145 Trần Hữu Tước"
+      }
+    },
+    "isPublic": true,
+    "imageUrl": "https://cdn.chotot.com/Pccge75X06aL4xDlJ2c-AUFWacdlVwHCriF9Wd5d8us/preset:view/plain/5e74c279ef16444555cda488ace5d0a1-2784236576756396176.jpg"
+  },
+  {
+    "price": 5000000,
+    "electricPrice": 4000,
+    "waterPrice": 3000,
+    "square": 30,
+    "summary": "Phòng khép kín 25m2 đủ đồ Phố Hàm Long Hoàn Kiếm",
+    "description": "\n CHO THUÊ CĂN HỘ STUDIO ĐẦY ĐỦ ĐỒ ĐIỀU HÒA GIƯỜNG TỦ PHỐ HÀM LONG CÁCH HỒ GƯƠM 350M\n -Tòa nhà 8 tầng tại số 25 Ngõ Hàm Long 2- Phố Hàm Long- quận Hoàn Kiếm vào ở được luôn.\n - Tòa nhà cách mặt phố Hàm Long 30m đường vào rộng, rất thuận tiện cho việc đi lại, sinh hoạt, vui chơi, giải trí,Ngay trung tâm phố cổ, chỉ 350m là ra tới Hồ Gươm.\n - Căn hộ rộng được lát sàn gỗ, căn nào cũng có cửa sổ rộng, thoáng mát. Các phòng được thiết kế hết sức hợp lý: kiểu căn hộ Studio, được lắp đầy đủ nội thất.\n - Mỗi phòng được trang bị điều hòa 2 chiều, giường, đệm,táp đầu giường, tủ quần áo, tủ lạnh,\n trần thạch cao, đèn ngủ đủ cả, bàn bếp xịn, hút mùi, bồn rửa bát xịn.\n - Nhà vệ sinh có thiết bị vệ sinh Inax cao cấp,sen tắm cây, bình nóng lạnh, ốp lát gạch Prime sang trọng hiện đại.\n - Gía cho thuê từ 4.500.000 -5.000.000 đ / tháng\n - (thanh toán linh hoạt và đặt cọc 1 tháng). DT Các phòng 22- 25- 28m2..\n - Tòa nhà trang bị thang máy cao cấp, máy giặt, truyền hình cáp, mỗi căn hộ được cấp thẻ từ thang máy riêng.\n - Tòa nhà có bảo vệ 24/24 nên an ninh cực ổn,khóa cửa vân tay ra vào thoải mái, nhà để xe rộng rãi.\n -Riêng sàn văn phòng tầng 1 diện tích rộng 40m2 giá 6 000.000 đ/ tháng.\n - thích hợp làm văn phòng, spa, siêu thị...\n + Địa chỉ: Số nhà 25 Ngõ Hàm Long 2-Phố Hàm Long- phường Phan Châu trinh- Hoàn Kiếm.\n Liên hệ chủ nhà Chị Hương\n",
+    "address": {
+      "create": {
+        "city": "Hà Nội",
+        "district": "Hoàn Kiếm",
+        "ward": "Phan Chu Trinh",
+        "detail": "25 ngõ Hàm Long 2, Đường Hàm Long"
+      }
+    },
+    "isPublic": true,
+    "imageUrl": "https://cdn.chotot.com/VEaBQGDMtYMwKLVeYE9rViS8VnQ_Adx7z2nh7MsTmj0/preset:view/plain/b1611c22f8bcb01e0b2bc65feea676fa-2726810026979274857.jpg"
+  },
+  {
+    "price": 4500000,
+    "electricPrice": 3500,
+    "waterPrice": 3000,
+    "square": 28,
+    "summary": "căn hộ mini đủ đồ ngõ 3 Nguyễn Văn Huyên Cầu giấy",
+    "description": "\n Chính chủ cho thuê Căn hộ cao cấp Cầu Giấy full nội thất từ 25-28m2\n -Căn hộ Studio DT28m2 giá 5 triệu/tháng.\n - Căn hộ studio DT 25 m2 giá 4,5 - 4.8 triệu / tháng\n - Diện tích: 25-28m2, cửa sổ thoáng mát.\n - Nội thất sang trọng, thang máy hiện đại, điều hòa, nóng lạnh, tivi, tủ bếp, tủ quần áo, tủ lạnh, bếp từ, thiết bị vệ sinh cao cấp...\n - Khu căn hộ đa số là người đi làm, chuyên gia nước ngoài ở nên rất văn minh và yên tĩnh có bảo vệ 24/24. Rất phù hợp với các cặp vợ chồng mới cưới, và người đi làm trí thức, sinh viên ngoan...\n - Vị trí cách công viên Nghĩa Đô 500m, bảo tàng Dân Tộc Học.\n - Gần các trường Đại học như Sư phạm, báo chí, quốc gia, Điện lực, Giao Thông….\n - Cách đường Nguyễn Văn Huyên 150m\n Địa chỉ: số 98 Ngõ 3 Nguyễn Văn Huyên Cầu Giấy\n",
+    "address": {
+      "create": {
+        "city": "Hà Nội",
+        "district": "Cầu Giấy",
+        "ward": "Quan Hoa",
+        "detail": "98, Ngõ 3 Đường Nguyễn Văn Huyên"
+      }
+    },
+    "isPublic": true,
+    "imageUrl": "https://cdn.chotot.com/VEaBQGDMtYMwKLVeYE9rViS8VnQ_Adx7z2nh7MsTmj0/preset:view/plain/b1611c22f8bcb01e0b2bc65feea676fa-2726810026979274857.jpg"
+  },
+  {
+    "price": 1800000,
+    "electricPrice": 3000,
+    "waterPrice": 2500,
+    "square": 15,
+    "summary": "Phòng trọ ngõ 123 tân mai",
+    "description": "Cho thuê phòng trọ ngõ 123 tân mai hoàng mai. Phòng sạch sẽ có nóng lạnh điều hòa. An ninh tốt thuận tiện cho việc đi lại",
+    "address": {
+      "create": {
+        "city": "Hà Nội",
+        "district": "Hoàng Mai",
+        "ward": "Tân Mai",
+        "detail": "Đường Tân Mai"
+      }
+    },
+    "isPublic": true,
+    "imageUrl": "https://cdn.chotot.com/8IelzSjHSem3P4wUCp8TLxBC5fhV3A2LKaoKuUHHaHI/preset:view/plain/2b01fb2c0e13075a84c6c4437f168fb2-2784333157835903566.jpg"
+  }
+]
